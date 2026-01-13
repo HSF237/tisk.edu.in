@@ -11,6 +11,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root {
+            /* Core Palette */
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --gold: #fbbf24;
+            --gold-glow: rgba(251, 191, 36, 0.4);
+            --green: #10b981;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            
+            /* UI Elements */
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-colored: 0 10px 30px -5px rgba(59, 130, 246, 0.25);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,258 +42,434 @@
             scroll-behavior: smooth;
         }
 
-        :root {
-            --primary: #0f172a;
-            --primary-light: #1e293b;
-            --accent: #3b82f6;
-            --accent-light: #60a5fa;
-            --gold: #fbbf24;
-            --green: #10b981;
-            --text-main: #334155;
-            --text-light: #94a3b8;
-            --white: #ffffff;
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 20px 40px -5px rgba(59, 130, 246, 0.2);
-        }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            /* Creative Body Background */
+            background: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(213,96%,96%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(225,96%,96%,1) 0, transparent 50%);
             color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, h4, h5 {
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
             letter-spacing: -0.02em;
+            color: var(--primary);
         }
 
-        /* Navigation */
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navigation --- */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
+            top: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             padding: 18px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 1000;
             box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
         }
 
         .nav-logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
+            font-size: 1.6rem; font-weight: 800; color: var(--primary);
+            display: flex; align-items: center; gap: 10px;
             text-decoration: none;
         }
-
         .nav-logo i { color: var(--gold); }
 
         .nav-links {
-            display: flex;
-            gap: 25px;
-            list-style: none;
+            display: flex; gap: 25px; list-style: none;
         }
 
         .nav-link {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-            position: relative;
+            color: var(--text-main); text-decoration: none; font-weight: 600;
+            transition: color 0.3s ease; position: relative; padding: 5px 0;
         }
 
         .nav-link:hover, .nav-link.active { color: var(--accent); }
         .nav-link::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
             background: var(--accent); transition: width 0.3s ease;
         }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link:hover::after { width: 100%; }
 
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                position: absolute; top: 100%; left: 0; right: 0; flex-direction: column;
-                background: white; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
-            }
-            .nav-links.active { max-height: 400px; }
-            .nav-links li { padding: 15px 5%; border-bottom: 1px solid #e2e8f0; }
-            .mobile-toggle { display: block; }
+        /* --- ORIGINAL HERO BANNER STYLES --- */
+        .page-hero {
+            /* Restored original gradient and layout */
+            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
+            color: white; 
+            padding: 150px 5% 100px; 
+            text-align: center; 
+            position: relative;
+            overflow: hidden; 
+            margin-top: 70px; /* Account for fixed nav */
         }
 
-        /* Page Hero */
-        .page-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
-            color: white; padding: 150px 5% 100px; text-align: center; position: relative;
-            overflow: hidden; margin-top: 70px;
-        }
+        /* Restored original SVG pattern overlay */
         .page-hero::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.1'%3E%3Ccircle cx='50' cy='50' r='40' stroke='white' fill='none'/%3E%3C/g%3E%3C/svg%3E");
             opacity: 0.1;
         }
-        .page-hero h1 { font-size: 3.5rem; margin-bottom: 20px; position: relative; z-index: 2; animation: fadeInUp 0.8s ease-out; }
-        .page-hero p { font-size: 1.2rem; position: relative; z-index: 2; opacity: 0.95; animation: fadeInUp 0.8s ease-out 0.2s backwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Container */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+        .page-hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px; 
+            position: relative; 
+            z-index: 2; 
+            animation: fadeUp 0.8s ease-out; 
+        }
+        
+        .page-hero p { 
+            font-size: 1.2rem; 
+            position: relative; 
+            z-index: 2; 
+            opacity: 0.95; 
+            animation: fadeUp 0.8s ease-out 0.2s backwards; 
+            max-width: 600px; margin: 0 auto;
+        }
 
-        /* Section Headings */
+        /* --- Layout Utilities --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
         .section-head {
-            text-align: center; margin-bottom: 60px; margin-top: 80px;
+            text-align: center; margin-bottom: 60px; margin-top: 80px; position: relative;
         }
-        .section-head h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .section-head p { color: var(--text-light); font-size: 1.1rem; }
-        .divider { width: 80px; height: 4px; background: linear-gradient(90deg, var(--accent), var(--gold)); margin: 0 auto; border-radius: 2px; }
-
-        /* --- NEW SECTIONS STYLES (Image Data) --- */
-        .data-section { background: white; border-radius: 16px; padding: 40px; box-shadow: var(--shadow); margin-bottom: 40px; border-top: 4px solid var(--gold); }
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .section-head h2 { font-size: 2.5rem; margin-bottom: 16px; color: var(--primary); }
+        .section-head p { color: var(--text-light); max-width: 600px; margin: 0 auto; }
         
-        .info-card { background: #f8fafc; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #e2e8f0; }
-        .info-card strong { display: block; font-size: 1.8rem; color: var(--accent); margin-bottom: 5px; font-family: 'Outfit', sans-serif; }
-        .info-card span { font-size: 0.9rem; color: var(--text-light); }
-
-        /* Staff Table Styling */
-        .table-responsive { overflow-x: auto; }
-        .staff-table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 600px; }
-        .staff-table th { background: var(--primary); color: white; padding: 15px; text-align: left; font-weight: 600; }
-        .staff-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; color: var(--text-main); }
-        .staff-table tr:last-child td { border-bottom: none; }
-        .count-badge { background: var(--gold); color: var(--primary); padding: 4px 10px; border-radius: 15px; font-weight: 700; font-size: 0.9rem; }
-
-        /* Results Bar */
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1rem; }
-        .result-bar-bg { width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin-bottom: 20px; }
-        .result-bar-fill { height: 100%; background: var(--green); width: 0; transition: width 1.5s ease-out; }
-
-        /* --- DOCUMENT PORTAL STYLES --- */
-        .doc-intro { max-width: 800px; margin: 0 auto 60px; text-align: center; color: var(--text-main); background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow); }
-        .doc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding-bottom: 80px; }
-
-        .doc-card {
-            background: white; border-radius: 16px; padding: 40px 30px; text-align: center;
-            box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: pointer; border: 1px solid transparent; position: relative; overflow: hidden;
+        .divider { 
+            width: 80px; height: 4px; background: linear-gradient(90deg, var(--accent), var(--gold)); 
+            margin: 20px auto 0; border-radius: 2px; 
         }
-        .doc-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: var(--accent-light); }
-        .doc-card::before {
+
+        /* --- Creative Data Cards --- */
+        .data-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px; margin-bottom: 80px;
+        }
+
+        .info-card {
+            background: white; padding: 40px 30px; border-radius: var(--radius-lg);
+            text-align: center; box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        
+        .info-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--accent), var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
         }
-        .doc-card:hover::before { transform: scaleX(1); }
 
-        .doc-icon-wrapper {
-            width: 80px; height: 80px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 25px; color: var(--accent); font-size: 2rem; transition: all 0.3s ease;
+        .info-card:hover {
+            transform: translateY(-10px); box-shadow: var(--shadow-colored);
         }
-        .doc-card:hover .doc-icon-wrapper { background: var(--accent); color: white; transform: rotateY(180deg); }
-        .doc-card:hover .doc-icon-wrapper i { transform: rotateY(-180deg); } 
-        .doc-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary); }
-        .doc-card p { font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px; }
-        .doc-action { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 600; font-size: 0.9rem; transition: gap 0.2s ease; }
-        .doc-card:hover .doc-action { gap: 12px; }
+        .info-card:hover::before { transform: scaleX(1); }
 
-        /* --- MODAL STYLES --- */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s ease; }
-        .modal.show { opacity: 1; }
-        .modal-content { background-color: transparent; margin: 5% auto; width: 90%; max-width: 900px; position: relative; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .info-icon {
+            width: 70px; height: 70px; background: #f1f5f9; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; color: var(--accent); font-size: 1.8rem;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover .info-icon { background: var(--primary); color: var(--gold); transform: rotate(360deg); }
+
+        .info-card .number {
+            display: block; font-size: 2.5rem; font-weight: 800; color: var(--primary);
+            margin-bottom: 5px; font-family: 'Outfit', sans-serif;
+        }
+        .info-card .label { font-size: 0.95rem; color: var(--text-light); font-weight: 500; }
+
+        /* --- Creative Table Design --- */
+        .table-container {
+            overflow: hidden; border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md); background: white;
+        }
+        .staff-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        .staff-table th { 
+            background: var(--primary); color: white; padding: 20px; text-align: left; 
+            font-weight: 600; font-size: 0.9rem; text-transform: uppercase;
+        }
+        .staff-table td { padding: 20px; border-bottom: 1px solid #f1f5f9; color: var(--text-main); transition: background 0.2s; }
+        .staff-table tr:hover td { background: #f8fafc; }
+        .staff-table tr:last-child td { border-bottom: none; }
         
-        .doc-paper { background: white; width: 100%; padding: 40px; border-radius: 4px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; text-align: center; border:1px solid #e2e8f0; max-height: 75vh; overflow-y: auto; }
-        .doc-seal { width: 120px; height: 120px; border: 5px double var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); font-weight: bold; font-size: 0.9rem; transform: rotate(-15deg); margin: 20px auto; opacity: 0.8; text-transform: uppercase; font-family: 'Outfit', sans-serif; text-align: center; line-height:1.2; }
-        .doc-preview-img { max-width: 100%; height: auto; border:1px solid #f1f5f9; margin: 20px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .modal-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 15px; }
-        .modal-title { font-size: 1.5rem; color: var(--primary); }
-        .close-btn { color: #ef4444; font-size: 2rem; font-weight: bold; cursor: pointer; transition: transform 0.2s; line-height: 1; }
-        .close-btn:hover { transform: scale(1.1); }
-        .doc-details { margin-top: 30px; text-align: left; background: #f8fafc; padding: 20px; border-radius: 8px; border-left: 4px solid var(--green); }
-        .doc-details h4 { color: var(--primary); margin-bottom: 10px; font-size: 1.1rem; }
-        .download-btn { display: inline-block; margin-top: 25px; padding: 12px 24px; background-color: var(--primary); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background 0.3s; }
-        .download-btn:hover { background-color: var(--primary-light); }
+        .count-badge { 
+            background: linear-gradient(135deg, var(--gold), #f59e0b); color: var(--primary); 
+            padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; 
+            box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.3); display: inline-block;
+        }
 
-        /* Footer */
-        footer { background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%); color: white; padding: 50px 5% 30px; text-align: center; }
-        .footer-content { max-width: 1200px; margin: 0 auto; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 50px; }
-        .footer-section h4 { margin-bottom: 20px; color: var(--gold); font-size: 1.1rem; }
-        .footer-section a { color: rgba(255, 255, 255, 0.8); text-decoration: none; display: block; margin-bottom: 10px; transition: color 0.3s; }
-        .footer-section a:hover { color: var(--gold); }
-        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 30px; font-size: 0.95rem; }
-        .social-links { display: flex; gap: 20px; justify-content: center; margin: 20px 0; }
-        .social-links a { width: 45px; height: 45px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
-        .social-links a:hover { background: var(--gold); color: var(--primary); transform: translateY(-5px); }
+        /* --- Results Chart --- */
+        .results-wrapper {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;
+            align-items: center;
+        }
+        .chart-container {
+            background: white; padding: 30px; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm); border: 1px solid #f1f5f9;
+        }
+        .percentage-circle {
+            width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--green) 0deg, #e2e8f0 0deg);
+            margin: 0 auto 20px; position: relative; display: flex; align-items: center; justify-content: center;
+            transition: background 1.5s ease-out;
+        }
+        .percentage-circle::before {
+            content: ''; position: absolute; width: 120px; height: 120px; background: white; border-radius: 50%;
+        }
+        .percentage-text {
+            position: absolute; z-index: 2; font-size: 2rem; font-weight: 800; color: var(--primary); font-family: 'Outfit';
+        }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* --- Document Grid --- */
+        .doc-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding-bottom: 80px;
+        }
+        
+        .doc-card {
+            background: white; border-radius: var(--radius-md); padding: 0; overflow: hidden;
+            box-shadow: var(--shadow-sm); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer; border: 1px solid #f1f5f9; position: relative; display: flex; flex-direction: column;
+            height: 100%;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-8px); box-shadow: var(--shadow-colored); border-color: var(--accent-light);
+        }
+
+        .doc-icon-area {
+            height: 140px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; transition: all 0.3s ease;
+        }
+        
+        .doc-card:hover .doc-icon-area { background: var(--primary); }
+        .doc-card:hover .doc-icon-area i { color: var(--white); transform: scale(1.1) rotate(-5deg); }
+        
+        .doc-icon-area i { font-size: 3.5rem; color: var(--accent); transition: all 0.4s ease; z-index: 2; }
+        
+        .doc-icon-area::after {
+            content: ''; position: absolute; width: 200px; height: 200px; background: rgba(255,255,255,0.1);
+            border-radius: 50%; top: -50px; left: -50px; z-index: 1;
+        }
+
+        .doc-content { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+        .doc-card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--primary); }
+        .doc-card p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; line-height: 1.5; flex-grow: 1; }
+        
+        .doc-link {
+            color: var(--accent); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;
+            transition: gap 0.2s ease;
+        }
+        .doc-card:hover .doc-link { gap: 14px; }
+
+        /* --- Footer --- */
+        footer { 
+            background: var(--primary); color: white; padding: 80px 5% 40px; 
+            position: relative; overflow: hidden; 
+        }
+        .footer-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 50px; margin-bottom: 60px; }
+        
+        .footer-brand h3 { color: white; font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .footer-brand h3 i { color: var(--gold); }
+        
+        .footer-section h4 { color: var(--gold); margin-bottom: 25px; font-size: 1.1rem; }
+        .footer-section a { color: #94a3b8; text-decoration: none; display: block; margin-bottom: 12px; transition: all 0.3s; }
+        .footer-section a:hover { color: white; padding-left: 5px; }
+
+        .social-links { display: flex; gap: 15px; }
+        .social-links a { 
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: white;
+        }
+        .social-links a:hover { background: var(--gold); color: var(--primary); transform: translateY(-3px); }
+
+        .footer-bottom { 
+            border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; 
+            text-align: center; color: #64748b; font-size: 0.9rem;
+        }
+
+        /* --- Creative Modal --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
+            opacity: 0; transition: opacity 0.3s ease; align-items: center; justify-content: center;
+        }
+        .modal.show { opacity: 1; }
+
+        .modal-content-wrapper {
+            background: white; width: 90%; max-width: 800px; border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden; transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .modal.show .modal-content-wrapper { transform: scale(1); }
+
+        .modal-header {
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            padding: 25px 40px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { color: white; font-size: 1.5rem; display: flex; align-items: center; gap: 12px; }
+        .modal-title i { color: var(--gold); }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.1); border: none; color: white; width: 36px; height: 36px;
+            border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;
+        }
+        .close-btn:hover { background: #ef4444; transform: rotate(90deg); }
+
+        .modal-body { padding: 40px; text-align: center; max-height: 70vh; overflow-y: auto; }
+        
+        .doc-seal {
+            width: 100px; height: 100px; border: 3px double var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: var(--gold);
+            font-weight: bold; font-size: 0.7rem; transform: rotate(-15deg); margin: 0 auto 20px;
+            opacity: 0.9; font-family: 'Outfit'; text-transform: uppercase; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .doc-preview-img { 
+            max-width: 100%; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            margin-bottom: 30px; border: 8px solid #f8fafc; 
+        }
+
+        .download-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--accent); color: white; padding: 14px 32px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; box-shadow: 0 10px 20px -5px var(--accent-glow);
+            transition: all 0.3s ease; border: none; cursor: pointer;
+        }
+        .download-btn:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 900px) {
             .page-hero h1 { font-size: 2.5rem; }
             .section-head h2 { font-size: 2rem; }
-            .doc-paper { padding: 20px; margin: 0 10px; }
-            .data-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links {
+                display: none; position: absolute; top: 100%; left: 0; width: 100%;
+                background: white; flex-direction: column; padding: 20px; box-shadow: var(--shadow-lg);
+                gap: 15px; text-align: center;
+            }
+            .nav-links.active { display: flex; animation: slideDown 0.3s ease; }
+            @keyframes slideDown { from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} }
+            .mobile-toggle { display: block; }
+            .footer-grid { text-align: center; }
+            .footer-brand h3 { justify-content: center; }
+            .social-links { justify-content: center; }
+            .footer-section a { display: inline-block; }
         }
     </style>
 </head>
 <body>
+
     <!-- Navigation -->
     <nav>
         <a href="index.html" class="nav-logo">
             <i class="fas fa-graduation-cap"></i> TISK EMS
         </a>
-        <ul class="nav-links">
+        <div class="mobile-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links" id="navLinks">
             <li><a href="index.html" class="nav-link">Home</a></li>
             <li><a href="about.html" class="nav-link">About</a></li>
             <li><a href="academics.html" class="nav-link">Academics</a></li>
-            <li><a href="teachers.html" class="nav-link active">Faculty</a></li>
+            <li><a href="teachers.html" class="nav-link">Faculty</a></li>
             <li><a href="events.html" class="nav-link">Events</a></li>
-            <li><a href="gallery.html" class="nav-link">Gallery</a></li>
-            <li><a href="mandatory-disclosure.html" class="nav-link">Disclosure</a></li>
+            <li><a href="mandatory-disclosure.html" class="nav-link active">Disclosure</a></li>
             <li><a href="contact.html" class="nav-link">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- ORIGINAL HERO SECTION -->
     <section class="page-hero">
         <h1>Mandatory Disclosure</h1>
         <p>Official Government Approved Documents & Certificates</p>
     </section>
 
-    <!-- Main Content -->
-    <section class="doc-portal">
-        <div class="container">
-            <div class="section-head fade-in">
-                <h2>School Statistics & Documents</h2>
+    <main>
+        <!-- Intro -->
+        <div class="container reveal">
+            <div class="doc-intro" style="max-width: 800px; margin: 0 auto 60px; text-align: center; color: var(--text-main); background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid #f1f5f9;">
+                <h3 style="margin-bottom: 10px;"><i class="fas fa-shield-alt" style="color: var(--gold); margin-right: 8px;"></i> CBSE Mandatory Disclosure</h3>
+                <p style="color: var(--text-light);">Detailed information regarding Teaching Staff, Infrastructure, Results, and Statutory Documents as per CBSE norms.</p>
+            </div>
+        </div>
+
+        <!-- Infrastructure Stats (Creative) -->
+        <section class="container">
+            <div class="section-head reveal">
+                <h2>Campus Infrastructure</h2>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="data-grid">
+                <div class="info-card reveal">
+                    <div class="info-icon"><i class="fas fa-ruler-combined"></i></div>
+                    <span class="number" data-target="4500">0</span>
+                    <span class="label">Total Area (Sq. Mt)</span>
+                </div>
+                <div class="info-card reveal" style="transition-delay: 100ms;">
+                    <div class="info-icon"><i class="fas fa-chalkboard"></i></div>
+                    <span class="number" data-target="1200">0</span>
+                    <span class="label">Classroom Area (Sq. Mt)</span>
+                </div>
+                <div class="info-card reveal" style="transition-delay: 200ms;">
+                    <div class="info-icon"><i class="fas fa-wifi"></i></div>
+                    <span class="number" data-target="100" data-suffix="%">0</span>
+                    <span class="label">Wi-Fi Coverage</span>
+                </div>
+                <div class="info-card reveal" style="transition-delay: 300ms;">
+                    <div class="info-icon"><i class="fas fa-restroom"></i></div>
+                    <span class="number" data-target="22">0</span>
+                    <span class="label">Functional Toilets</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staff & Results Split Section -->
+        <section class="container">
+            <div class="section-head reveal">
+                <h2>Faculty & Performance</h2>
                 <div class="divider"></div>
             </div>
 
-            <!-- Intro -->
-            <div class="doc-intro fade-in">
-                <h3><i class="fas fa-shield-alt" style="color: var(--gold); margin-right: 8px;"></i> CBSE Mandatory Disclosure</h3>
-                <p style="margin-top: 10px;">Detailed information regarding Teaching Staff, Infrastructure, Results, and Statutory Documents as per CBSE norms.</p>
-            </div>
-
-            <!-- NEW SECTION 1: Teaching Staff (From Image 1) -->
-            <div class="data-section fade-in">
-                <h3 style="margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-chalkboard-teacher" style="color: var(--accent);"></i> Staff (Teaching)
-                </h3>
-                <div class="table-responsive">
+            <div class="results-wrapper">
+                <!-- Staff Table -->
+                <div class="table-container reveal">
                     <table class="staff-table">
                         <thead>
                             <tr>
-                                <th>Category</th>
-                                <th>Count</th>
+                                <th width="70%">Category</th>
+                                <th width="30%">Count</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -282,339 +482,284 @@
                                 <td><span class="count-badge">25</span></td>
                             </tr>
                             <tr>
-                                <td>PGT (Post Graduate Teacher)</td>
+                                <td>PGT (Post Graduate)</td>
                                 <td><span class="count-badge">4</span></td>
                             </tr>
                             <tr>
-                                <td>TGT (Trained Graduate Teacher)</td>
+                                <td>TGT (Trained Graduate)</td>
                                 <td><span class="count-badge">12</span></td>
                             </tr>
                             <tr>
-                                <td>PRT (Primary Teacher)</td>
+                                <td>PRT (Primary)</td>
                                 <td><span class="count-badge">9</span></td>
                             </tr>
                             <tr>
-                                <td>Special Educator / Counselor</td>
+                                <td>Special Educator</td>
                                 <td><span class="count-badge">1</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- NEW SECTION 2: Infrastructure (From Image 1) -->
-            <div class="data-section fade-in">
-                <h3 style="margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-school" style="color: var(--accent);"></i> School Infrastructure
-                </h3>
-                <div class="data-grid">
-                    <div class="info-card">
-                        <i class="fas fa-ruler-combined" style="color: var(--gold); margin-bottom: 10px; font-size: 1.5rem;"></i>
-                        <strong>4,500</strong>
-                        <span>Total School Area (Sq. Mt)</span>
+                <!-- Results Chart -->
+                <div class="chart-container reveal">
+                    <div class="percentage-circle" data-percent="97.7">
+                        <span class="percentage-text">0%</span>
                     </div>
-                    <div class="info-card">
-                        <i class="fas fa-chalkboard" style="color: var(--gold); margin-bottom: 10px; font-size: 1.5rem;"></i>
-                        <strong>1,200</strong>
-                        <span>Classroom Area (Sq. Mt)</span>
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 5px;">Class X Results</h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Pass Percentage (Last Session)</p>
                     </div>
-                    <div class="info-card">
-                        <i class="fas fa-wifi" style="color: var(--gold); margin-bottom: 10px; font-size: 1.5rem;"></i>
-                        <strong>Yes</strong>
-                        <span>Internet Facility</span>
-                    </div>
-                    <div class="info-card">
-                        <i class="fas fa-restroom" style="color: var(--gold); margin-bottom: 10px; font-size: 1.5rem;"></i>
-                        <strong>22</strong>
-                        <span>Functional Toilets</span>
+                    <div class="result-details">
+                        <p style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;"><span>Total Appeared:</span> <strong>45</strong></p>
+                        <p style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;"><span>Total Passed:</span> <strong>44</strong></p>
+                        <p style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;"><span>Distinction:</span> <strong>12</strong></p>
+                        <p style="display: flex; justify-content: space-between;"><span>Session:</span> <strong>Apr-Mar</strong></p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- NEW SECTION 3: Results & Academics (From Image 2) -->
-            <div class="data-section fade-in">
-                <h3 style="margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-chart-line" style="color: var(--accent);"></i> Results & Academics
-                </h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                    <div>
-                        <h4 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--primary);">Class X Results</h4>
-                        <div class="result-row">
-                            <span>Total Appeared:</span>
-                            <strong>45</strong>
-                        </div>
-                        <div class="result-row">
-                            <span>Total Passed:</span>
-                            <strong>44</strong>
-                        </div>
-                        <div class="result-row" style="align-items: flex-end;">
-                            <span style="font-weight: 700;">Pass Percentage:</span>
-                            <strong style="color: var(--green); font-size: 1.5rem;">97.7%</strong>
-                        </div>
-                        <div class="result-bar-bg">
-                            <div class="result-bar-fill" style="width: 0%;" data-width="97.7%"></div>
-                        </div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
-                        <h4 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--primary);">Academic Info</h4>
-                        <p style="margin-bottom: 10px; font-size: 0.95rem;"><strong><i class="far fa-calendar-alt"></i> Session:</strong> April to March</p>
-                        <p style="font-size: 0.95rem;"><strong><i class="fas fa-inr"></i> Fee Structure:</strong> Approved by School Management Committee</p>
-                        <p style="font-size: 0.95rem; margin-top: 10px; color: var(--text-light);">Detailed fee structure available in office.</p>
-                    </div>
-                </div>
+        <!-- Document Portal -->
+        <section class="container" style="margin-top: 80px;">
+            <div class="section-head reveal">
+                <h2>Document Repository</h2>
+                <p>Access certified statutory documents and government approvals.</p>
+                <div class="divider"></div>
             </div>
 
-            <!-- Existing Section: Documents (From Image 3) -->
-            <h3 style="text-align: center; margin: 60px 0 40px; color: var(--primary);">Documents & Information</h3>
-            <div class="doc-grid fade-in">
-                <!-- Building Certificate -->
+            <div class="doc-grid reveal">
+                <!-- Building -->
                 <div class="doc-card" onclick="openDocument('building')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-building"></i>
                     </div>
-                    <h3>Building Certificate</h3>
-                    <p>Structural stability and safety approval.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>Building Certificate</h3>
+                        <p>Structural stability and safety approval from competent authority.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
 
-                <!-- Fire Certificate -->
+                <!-- Fire -->
                 <div class="doc-card" onclick="openDocument('fire')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-fire-extinguisher"></i>
                     </div>
-                    <h3>Fire Safety Certificate</h3>
-                    <p>No objection and safety compliance from Fire Department.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>Fire Safety Certificate</h3>
+                        <p>No objection certificate regarding fire safety measures.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
 
-                <!-- Water & Sanitation -->
+                <!-- Water -->
                 <div class="doc-card" onclick="openDocument('water')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-hand-holding-water"></i>
                     </div>
-                    <h3>Water & Sanitation</h3>
-                    <p>Health and hygiene clearance certificate.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>Water & Sanitation</h3>
+                        <p>Health and hygiene clearance certificate.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
 
-                <!-- Affiliation Letter -->
+                <!-- Affiliation -->
                 <div class="doc-card" onclick="openDocument('affiliation')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-file-contract"></i>
                     </div>
-                    <h3>CBSE Affiliation</h3>
-                    <p>Official recognition letter from the Board.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>CBSE Affiliation</h3>
+                        <p>Official recognition letter from the Board.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
 
-                <!-- Land Documents -->
+                <!-- Land -->
                 <div class="doc-card" onclick="openDocument('land')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
-                    <h3>Land Documents</h3>
-                    <p>Ownership and land utilization papers.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>Land Documents</h3>
+                        <p>Ownership and land utilization papers.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
 
-                <!-- Society Registration -->
+                <!-- Society -->
                 <div class="doc-card" onclick="openDocument('society')">
-                    <div class="doc-icon-wrapper">
+                    <div class="doc-icon-area">
                         <i class="fas fa-users-cog"></i>
                     </div>
-                    <h3>Society / Trust Registration</h3>
-                    <p>Registration certificate of the managing body.</p>
-                    <span class="doc-action">View Document <i class="fas fa-arrow-right"></i></span>
+                    <div class="doc-content">
+                        <h3>Society Registration</h3>
+                        <p>Registration certificate of the managing body.</p>
+                        <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-graduation-cap"></i> TISK EMS</h3>
+                    <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6;">
+                        Empowering students with knowledge, values, and innovation since 1988.
+                    </p>
+                </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
                     <a href="academics.html">Academics</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="mandatory-disclosure.html">Disclosure</a>
+                    <a href="mandatory-disclosure.html">Mandatory Disclosure</a>
+                    <a href="contact.html">Contact Us</a>
                 </div>
                 <div class="footer-section">
-                    <h4>Information</h4>
-                    <a href="teachers.html">Faculty</a>
-                    <a href="gallery.html">Gallery</a>
-                    <a href="events.html">Events</a>
-                    <a href="tc.html">TC Register</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Follow Us</h4>
+                    <h4>Connect</h4>
                     <div class="social-links">
-                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
+                    <p style="margin-top: 20px; color: #64748b; font-size: 0.85rem;">
+                        Kannur, Kerala, India<br>
+                        +91 123 456 7890
+                    </p>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2024 TISK English Medium School, Kannur. All rights reserved.</p>
-                <p>CBSE Affiliation: 931267 | Established: 1988</p>
+                &copy; 2024 TISK English Medium School. All Rights Reserved.
             </div>
         </div>
     </footer>
 
-    <!-- Document Viewer Modal -->
+    <!-- Modal -->
     <div id="docModal" class="modal">
-        <div class="modal-content">
-            <div class="doc-paper">
-                <div class="modal-header">
-                    <h2 id="modalTitle" class="modal-title">Document Title</h2>
-                    <span class="close-btn" onclick="closeDocument()">&times;</span>
+        <div class="modal-content-wrapper">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Document Name</h2>
+                <button class="close-btn" onclick="closeDocument()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalBodyContent">
+                    <!-- Content injected via JS -->
                 </div>
-
-                <div id="modalBody">
-                    <!-- Dynamic Content will be injected here -->
-                </div>
-                
-                <div class="doc-details">
-                    <h4><i class="fas fa-info-circle"></i> Certificate Details</h4>
-                    <p id="certText" style="font-size: 0.95rem; color: #555;">This document certifies that the above mentioned entity complies with all standards required by the governing authority.</p>
-                </div>
-
-                <a href="#" class="download-btn" onclick="alert('This would download` the official PDF file.'); return false;">
-                    <i class="fas fa-download"></i> Download Official Copy
-                </a>
+                <button class="download-btn" onclick="alert('Downloading simulated PDF...')">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data Store for Documents (Simulating database)
+        // --- Data Store ---
         const documents = {
-            'building': {
-                title: 'Building Stability Certificate',
-                image: 'https://picsum.photos/seed/building/600/400',
-                seal: 'Approved Structure',
-                desc: 'Certified by licensed structural engineers confirming the building is safe for educational purposes as per National Building Code.'
-            },
-            'fire': {
-                title: 'Fire No Objection Certificate',
-                image: 'https://picsum.photos/seed/fire/600/400',
-                seal: 'Fire Safe',
-                desc: 'Issued by the Director General of Fire and Rescue Services, confirming adequate fire safety measures are in place.'
-            },
-            'water': {
-                title: 'Water & Health Sanitation',
-                image: 'https://picsum.photos/seed/water/600/400',
-                seal: 'Hygiene Certified',
-                desc: 'Health certificate issued by the local health inspector confirming potable water supply and sanitary conditions.'
-            },
-            'affiliation': {
-                title: 'CBSE Affiliation Letter',
-                image: 'https://picsum.photos/seed/affiliation/600/400',
-                seal: 'CBSE Approved',
-                desc: 'Official letter of affiliation granted by the Central Board of Secondary Education (Affiliation No: 931267).'
-            },
-            'land': {
-                title: 'Land Ownership Documents',
-                image: 'https://picsum.photos/seed/land/600/400',
-                seal: 'Verified Title',
-                desc: 'Encumbrance Certificate and Title Deed showing clear ownership of the land where the school is situated.'
-            },
-            'society': {
-                title: 'Trust / Society Registration',
-                image: 'https://picsum.photos/seed/society/600/400',
-                seal: 'Registered Body',
-                desc: 'Certificate of Registration of the Society/Trust running the school, issued by the Registrar of Societies.'
-            }
+            'building': { title: 'Building Stability Certificate', seal: 'Safe Structure', img: 'https://picsum.photos/seed/build/600/400', desc: 'Certified structural stability for school premises.' },
+            'fire': { title: 'Fire NOC', seal: 'Fire Safe', img: 'https://picsum.photos/seed/fire/600/400', desc: 'Fire safety compliance clearance.' },
+            'water': { title: 'Water & Sanitation', seal: 'Hygiene Certified', img: 'https://picsum.photos/seed/water/600/400', desc: 'Potable water and sanitation clearance.' },
+            'affiliation': { title: 'CBSE Affiliation Letter', seal: 'CBSE Approved', img: 'https://picsum.photos/seed/aff/600/400', desc: 'Affiliation No: 931267.' },
+            'land': { title: 'Land Documents', seal: 'Verified Title', img: 'https://picsum.photos/seed/land/600/400', desc: 'Land ownership and utilization certificate.' },
+            'society': { title: 'Society Registration', seal: 'Registered Body', img: 'https://picsum.photos/seed/soc/600/400', desc: 'Trust/Society registration certificate.' }
         };
 
+        // --- Scroll Animation Observer ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger Counters if visible
+                    const counters = entry.target.querySelectorAll('.number');
+                    counters.forEach(counter => {
+                        const updateCounter = () => {
+                            const target = +counter.getAttribute('data-target');
+                            const suffix = counter.getAttribute('data-suffix') || '';
+                            const count = +counter.innerText.replace(/\D/g,'');
+                            const increment = target / 100;
+
+                            if (count < target) {
+                                counter.innerText = Math.ceil(count + increment) + suffix;
+                                setTimeout(updateCounter, 20);
+                            } else {
+                                counter.innerText = target + suffix;
+                            }
+                        };
+                        updateCounter();
+                    });
+
+                    // Trigger Chart Circle
+                    const circle = entry.target.querySelector('.percentage-circle');
+                    if(circle) {
+                        const percent = circle.getAttribute('data-percent');
+                        const text = circle.querySelector('.percentage-text');
+                        circle.style.background = `conic-gradient(var(--green) ${percent * 3.6}deg, #e2e8f0 0deg)`;
+                        
+                        let currentP = 0;
+                        const interval = setInterval(() => {
+                            if(currentP >= percent) clearInterval(interval);
+                            else {
+                                currentP++;
+                                text.innerText = currentP + "%";
+                            }
+                        }, 20);
+                    }
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Modal Logic ---
         const modal = document.getElementById("docModal");
         const modalTitle = document.getElementById("modalTitle");
-        const modalBody = document.getElementById("modalBody");
-        const certText = document.getElementById("certText");
+        const modalContent = document.getElementById("modalBodyContent");
 
-        // Open Modal Function
-        function openDocument(docKey) {
-            const data = documents[docKey];
-            if(!data) return;
+        function openDocument(key) {
+            const doc = documents[key];
+            if(!doc) return;
 
-            // Populate Content
-            modalTitle.innerText = data.title;
-            certText.innerText = data.desc;
-            
-            // Create the document preview structure
-            modalBody.innerHTML = `
-                <div class="doc-seal">${data.seal}</div>
-                <img src="${data.image}" alt="${data.title} Preview" class="doc-preview-img">
-                <p style="color: #64748b; font-size: 0.9rem;">Document ID: ${docKey.toUpperCase()}-${Math.floor(Math.random() * 10000)} | Valid Until: Dec 2034</p>
+            modalTitle.innerHTML = `<i class="fas fa-file-alt"></i> ${doc.title}`;
+            modalContent.innerHTML = `
+                <div class="doc-seal">${doc.seal}</div>
+                <img src="${doc.img}" class="doc-preview-img" alt="Preview">
+                <p style="color: #64748b; margin-bottom: 20px;">${doc.desc}</p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #64748b;">
+                    <i class="fas fa-info-circle"></i> This is a digital representation of the original physical document available at the school office.
+                </div>
             `;
-
-            // Show Modal
-            modal.style.display = "block";
-            // Small delay to allow display block to apply before opacity transition
-            setTimeout(() => {
-                modal.classList.add("show");
-            }, 10);
+            
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("show"), 10);
         }
 
-        // Close Modal Function
         function closeDocument() {
             modal.classList.remove("show");
-            // Wait for transition to finish before hiding
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 300);
+            setTimeout(() => modal.style.display = "none", 300);
         }
 
-        // Close when clicking outside content
         window.onclick = function(event) {
-            if (event.target == modal) {
-                closeDocument();
-            }
+            if (event.target == modal) closeDocument();
         }
 
-        // Navigation Logic (Existing)
+        // --- Mobile Menu ---
         function toggleMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('active');
         }
 
-        // Set active nav link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.href === window.location.href) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-
-        // Close menu when clicking on a link
+        // Close menu on link click
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('active');
             });
-        });
-
-        // Animate Progress Bars on Scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const bar = entry.target.querySelector('.result-bar-fill');
-                    if(bar) {
-                        const targetWidth = bar.getAttribute('data-width');
-                        bar.style.width = targetWidth;
-                    }
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.data-section').forEach(section => {
-            observer.observe(section);
         });
     </script>
 </body>
