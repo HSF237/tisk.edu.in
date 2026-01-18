@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-800 font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 uppercase tracking-wide text-sm;
+  }
+  
+  .btn-primary {
+    @apply bg-white text-primary shadow-lg hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  .btn-gold {
+    @apply bg-gold text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:bg-yellow-400;
+  }
+  
+  .btn-accent {
+    @apply bg-accent text-white shadow-lg hover:shadow-xl hover:-translate-y-1 hover:bg-accent-light;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl p-8 shadow-lg border border-blue-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 focus:outline-none focus:border-accent focus:bg-white transition-all;
+  }
+  
+  .section-head {
+    @apply text-center mb-16;
+  }
+  
+  .section-head h2 {
+    @apply text-4xl md:text-5xl font-bold text-primary mb-4;
+  }
+  
+  .divider {
+    @apply w-16 h-1 bg-gradient-to-r from-accent to-gold mx-auto rounded-full;
+  }
+}
+

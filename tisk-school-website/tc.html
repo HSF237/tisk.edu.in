@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Certificate | TISK English Medium School</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* --- MAIN PAGE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --gold: #fbbf24;
+            --text-main: #334155;
+            --text-light: #94a3b8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f8fafc;
+            color: var(--text-main);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+        }
+
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-logo i { color: var(--gold); }
+        .nav-links { display: flex; gap: 25px; list-style: none; }
+        .nav-link { color: var(--text-main); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
+            color: white;
+            padding: 150px 5% 100px;
+            text-align: center;
+        }
+
+        .page-hero h1 { font-size: 3.5rem; margin-bottom: 20px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 80px 5%; }
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 45px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-header { text-align: center; margin-bottom: 40px; }
+        .form-header h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+        .form-header p { color: var(--text-light); }
+
+        .form-group { margin-bottom: 25px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-label { display: block; font-weight: 700; color: var(--primary); margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 1rem; transition: all 0.3s; background: #f8fafc; }
+        .form-input:focus { outline: none; border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        
+        textarea.form-input { resize: vertical; min-height: 100px; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px; padding: 14px 35px;
+            border-radius: 50px; font-weight: 700; border: none; cursor: pointer;
+            transition: all 0.3s; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;
+            width: 100%; justify-content: center;
+        }
+        .btn-gold { background: var(--gold); color: var(--primary); box-shadow: 0 8px 20px rgba(251,191,36,0.3); }
+        .btn-gold:hover { background: #fcd34d; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(251,191,36,0.4); }
+
+        /* --- PDF CERTIFICATE TEMPLATE --- */
+        #certificate-template {
+            /* Hidden by default */
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 210mm;
+            height: 297mm; /* Fixed height */
+            padding: 25mm 30mm;
+            
+            /* IVORY BACKGROUND */
+            background-color: #FFFFF0; 
+            
+            font-family: 'Times New Roman', Times, serif;
+            color: #000;
+            box-sizing: border-box;
+            line-height: 1.3;
+            z-index: 9999;
+        }
+
+        /* Physical Border Wrapper (For PDF compatibility) */
+        .cert-border-wrapper {
+            position: absolute;
+            top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+            border: 3px double #5c4d3c;
+            pointer-events: none;
+            height: calc(100% - 20mm);
+        }
+
+        .cert-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 15px; position: relative; z-index: 1; }
+        .cert-logo { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .cert-sub { font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- STRICT ALIGNMENT FIELDS --- */
+        .tc-content { position: relative; z-index: 1; }
+        
+        .tc-row {
+            display: flex;
+            align-items: flex-end; /* Aligns text bottom with underline bottom */
+            margin-bottom: 35px;
+        }
+
+        .tc-label {
+            font-weight: bold;
+            width: 190px; /* Fixed width for perfect alignment */
+            font-size: 15px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* The Underline Box */
+        .tc-value-box {
+            flex: 1;
+            border-bottom: 1px solid #000;
+            margin-left: 10px;
+            padding-bottom: 0px; /* Critical: 0 padding so text sits on line */
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 1.2;
+            color: #000;
+        }
+
+        /* Split Row (Class + Admission) */
+        .tc-split-container { display: flex; gap: 40px; flex: 1; }
+        .tc-split-item { display: flex; align-items: flex-end; flex: 1; }
+        .tc-split-label { font-weight: bold; width: 110px; font-size: 15px; text-transform: uppercase; white-space: nowrap; }
+        .tc-split-value { flex: 1; border-bottom: 1px solid #000; margin-left: 8px; padding-bottom: 0px; font-weight: 500; font-size: 15px; }
+
+        /* Signature Area */
+        .cert-footer { margin-top: 100px; display: flex; justify-content: flex-end; padding-right: 5px; position: relative; z-index: 1; }
+        .sign-box { text-align: center; width: 200px; }
+        .sign-line { border-top: 1px solid #000; margin-top: 60px; }
+        .sign-text { margin-top: 5px; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+
+        footer { background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); color: white; padding: 50px 5% 20px; text-align: center; }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-logo">
+            <i class="fas fa-graduation-cap"></i> TISK EMS
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="academics.html" class="nav-link">Academics</a></li>
+            <li><a href="teachers.html" class="nav-link active">Faculty</a></li>
+            <li><a href="events.html" class="nav-link">Events</a></li>
+            <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+            <li><a href="mandatory-disclosure.html" class="nav-link">Disclosure</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-hero">
+        <h1>Transfer Certificate</h1>
+        <p>Generate Official TC</p>
+    </section>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Generate TC Online</h2>
+                <p>Fill in the details. The PDF will be formatted perfectly.</p>
+            </div>
+
+            <form id="tcForm">
+                <div class="form-group">
+                    <label class="form-label">Student Full Name</label>
+                    <input type="text" id="tcName" class="form-input" required placeholder="e.g. JOHN DOE">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Class</label>
+                        <select id="tcClass" class="form-input" required>
+                            <option value="">Select Class</option>
+                            <option>Class X</option>
+                            <option>Class IX</option>
+                            <option>Class VIII</option>
+                            <option>Class VII</option>
+                            <option>Class VI</option>
+                            <option>Class V</option>
+                            <option>Class IV</option>
+                            <option>Class III</option>
+                            <option>Class II</option>
+                            <option>Class I</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Admission Number</label>
+                        <input type="text" id="tcAdmNo" class="form-input" required placeholder="e.g. 2024001">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" id="tcDob" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Parent / Guardian Name</label>
+                    <input type="text" id="tcParent" class="form-input" required placeholder="Father's Name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date of Leaving</label>
+                    <input type="date" id="tcDateLeaving" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Reason for Leaving</label>
+                    <textarea id="tcReason" class="form-input" rows="3" required placeholder="Reason..."></textarea>
+                </div>
+
+                <button type="button" class="btn btn-gold" onclick="generateTC()">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HIDDEN CERTIFICATE TEMPLATE -->
+    <div id="certificate-template">
+        <div class="cert-border-wrapper"></div>
+        <div class="cert-header">
+            <div class="cert-logo">TISK English Medium School</div>
+            <div class="cert-sub">Transfer Certificate</div>
+        </div>
+
+        <!-- Fields Section -->
+        <div class="tc-content" style="padding: 0 10px;">
+            <!-- Row 1: Student Name -->
+            <div class="tc-row">
+                <div class="tc-label">Student Full Name:</div>
+                <div class="tc-value-box" id="certName">________________</div>
+            </div>
+
+            <!-- Row 2: Class & Admission -->
+            <div class="tc-row">
+                <div class="tc-split-container">
+                    <div class="tc-split-item">
+                        <div class="tc-split-label">Class:</div>
+                        <div class="tc-split-value" id="certClass">___________</div>
+                    </div>
+                    <div class="tc-split-item">
+                        <div class="tc-split-label">Admission No:</div>
+                        <div class="tc-split-value" id="certAdmNo">___________</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Parent Name -->
+            <div class="tc-row">
+                <div class="tc-label">Parent / Guardian Name:</div>
+                <div class="tc-value-box" id="certParent">____________________________</div>
+            </div>
+
+            <!-- Row 4: DOB -->
+            <div class="tc-row">
+                <div class="tc-label">Date of Birth:</div>
+                <div class="tc-value-box" id="certDob">____________________________</div>
+            </div>
+
+            <!-- Row 5: Date -->
+            <div class="tc-row">
+                <div class="tc-label">Date:</div>
+                <div class="tc-value-box" id="certDateToday">____________________________</div>
+            </div>
+
+            <!-- Row 6: Reason -->
+            <div class="tc-row">
+                <div class="tc-label">Reason for Leaving:</div>
+                <div class="tc-value-box" id="certReason">____________________________________________________________________________</div>
+            </div>
+        </div>
+
+        <!-- Signature -->
+        <div class="cert-footer">
+            <div class="sign-box">
+                <div class="sign-line"></div>
+                <div class="sign-text">Principal</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 TISK English Medium School. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function generateTC() {
+            // 1. Get Values
+            const name = document.getElementById('tcName').value.trim();
+            const pClass = document.getElementById('tcClass').value.trim();
+            const admNo = document.getElementById('tcAdmNo').value.trim();
+            const dob = document.getElementById('tcDob').value;
+            const parent = document.getElementById('tcParent').value.trim();
+            const dateLeaving = document.getElementById('tcDateLeaving').value;
+            const reason = document.getElementById('tcReason').value.trim();
+
+            // 2. Validation
+            if (!name || !admNo || !parent || !pClass || !dob || !dateLeaving || !reason) {
+                alert('Please fill all fields correctly.');
+                return;
+            }
+
+            // 3. Format Date Function (DD/MM/YYYY)
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const d = new Date(dateStr);
+                return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+            };
+
+            // 4. Fill Template
+            document.getElementById('certName').textContent = name;
+            document.getElementById('certClass').textContent = pClass;
+            document.getElementById('certAdmNo').textContent = admNo;
+            document.getElementById('certParent').textContent = parent;
+            document.getElementById('certDob').textContent = formatDate(dob);
+            document.getElementById('certDateToday').textContent = formatDate(dateLeaving);
+            document.getElementById('certReason').textContent = reason;
+
+            // 5. FIX: Show Template to Render, Wait, then PDF
+            const template = document.getElementById('certificate-template');
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+
+            // Show button loader
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+            btn.disabled = true;
+
+            // Make template visible (Overlay)
+            template.style.display = 'block';
+
+            // WAIT 500ms to allow browser to render the hidden element
+            setTimeout(() => {
+                const element = document.getElementById('certificate-template');
+                const opt = {
+                    margin:       0,
+                    filename:     `TC_${name.replace(/\s+/g,'_')}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true, 
+                        logging: false,
+                        letterRendering: true 
+                    },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                // Generate PDF
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // Hide template again
+                    template.style.display = 'none';
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Downloaded Successfully!');
+                }).catch(err => {
+                    console.error(err);
+                    template.style.display = 'none';
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Error generating PDF.');
+                });
+            }, 500);
+        }
+    </script>
+</body>
+</html>

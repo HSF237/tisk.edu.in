@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academics & Facilities | TISK English Medium School</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --gold: #fbbf24;
+            --text-main: #334155;
+            --text-light: #94a3b8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f8fafc;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+        }
+
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-logo i {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent);
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
+            color: white;
+            padding: 150px 5% 100px;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        .section-head {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-head h2 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            width: 70px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+
+        .curriculum-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .curriculum-card h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .subject-tag {
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .subject-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59,130,246,0.3);
+        }
+
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .facility-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .facility-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease-out;
+        }
+
+        .facility-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .facility-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .facility-card:hover .facility-img {
+            transform: scale(1.1);
+        }
+
+        .facility-content {
+            padding: 30px;
+        }
+
+        .facility-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .facility-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .facility-content p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: white;
+            padding: 50px 5% 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .facilities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-logo">
+            <i class="fas fa-graduation-cap"></i> TISK EMS
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="academics.html" class="nav-link active">Academics</a></li>
+            <li><a href="teachers.html" class="nav-link">Faculty</a></li>
+            <li><a href="events.html" class="nav-link">Events</a></li>
+            <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+            <li><a href="mandatory-disclosure.html" class="nav-link">Disclosure</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-hero">
+        <h1>Academics & Facilities</h1>
+        <p>Excellence in Education with Modern Infrastructure</p>
+    </section>
+
+    <div class="container">
+        <div class="curriculum-card">
+            <h3>CBSE Curriculum</h3>
+            <p style="color: var(--text-light); margin-bottom: 20px; line-height: 1.8;">
+                We follow the Central Board of Secondary Education (CBSE) curriculum, 
+                which is recognized nationwide and internationally. Our curriculum is 
+                designed to provide a balanced education that promotes holistic development.
+            </p>
+            <h4 style="color: var(--primary); margin: 25px 0 15px;">Subjects Offered</h4>
+            <div class="subjects-grid">
+                <div class="subject-tag">English</div>
+                <div class="subject-tag">Mathematics</div>
+                <div class="subject-tag">Science</div>
+                <div class="subject-tag">Social Studies</div>
+                <div class="subject-tag">Hindi</div>
+                <div class="subject-tag">Malayalam</div>
+                <div class="subject-tag">Computer Science</div>
+                <div class="subject-tag">Physical Education</div>
+                <div class="subject-tag">Arts</div>
+                <div class="subject-tag">General Knowledge</div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Our Facilities</h2>
+            <div class="divider"></div>
+        </div>
+
+        <div class="facilities-grid">
+            <div class="facility-card">
+                <img src="https://www.shutterstock.com/image-illustration/modern-computer-classroom-featuring-multiple-600nw-2490250733.jpg" alt="Computer Lab" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-laptop-code facility-icon"></i>
+                    <h3>Computer Lab</h3>
+                    <p>Advanced systems with high-speed internet, coding labs, and digital literacy programs for all students.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="https://srisarvajnaschool.in/wp-content/uploads/2023/12/24.jpg" alt="Science Lab" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-flask facility-icon"></i>
+                    <h3>Science Laboratory</h3>
+                    <p>Modern Physics, Chemistry, and Biology labs with experimental equipment and research facilities.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/blogs/20044/images/VoNLCopMRhSPSTxOO4hQ_caleb-woods-fulXJYIvRi8-unsplash.jpg" alt="Library" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-book facility-icon"></i>
+                    <h3>Library</h3>
+                    <p>Over 200+ books, journals, and digital resources to support learning and research.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="https://content.jdmagicbox.com/comp/def_content/cricket-ground-on-hire/y3aherodbh-cricket-ground-on-hire-10-6ajvc.jpg" alt="Sports" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-football-ball facility-icon"></i>
+                    <h3>Sports Facilities</h3>
+                    <p>Well-maintained grounds for cricket, football, badminton, and other athletic activities.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFmsKqLnl-pbnHhEPTk0oJhTzOTYcBAyo9lg&s" alt="Smart Classroom" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-chalkboard-teacher facility-icon"></i>
+                    <h3>Smart Classrooms</h3>
+                    <p>Interactive boards, projectors, and digital learning tools for immersive education experience.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsakBakQQBefMqoJcI_smkW3kofNFOIPQFyg&s" alt="Auditorium" class="facility-img">
+                <div class="facility-content">
+                    <i class="fas fa-theater-masks facility-icon"></i>
+                    <h3>Prayer Hall</h3>
+                        <p>Modern auditorium for assemblies, cultural programs, seminars and co-curricular events.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 TISK English Medium School. All Rights Reserved. | CBSE Affiliation No: 931267</p>
+    </footer>
+
+    <!-- WhatsApp & Back to Top Buttons -->
+    <a href="https://wa.me/914972812349" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()" title="Back to Top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <style>
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: #25d366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); transition: all 0.3s ease; z-index: 1000; text-decoration: none; }
+        .whatsapp-float:hover { background-color: #128c7e; transform: scale(1.1); box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6); }
+        .back-to-top { position: fixed; bottom: 100px; right: 30px; width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: all 0.3s ease; z-index: 999; }
+        .back-to-top.show { display: flex; animation: slideUp 0.3s ease-out; }
+        .back-to-top:hover { transform: translateY(-5px); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5); background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .whatsapp-float { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; } .back-to-top { bottom: 80px; right: 20px; width: 45px; height: 45px; font-size: 18px; } }
+    </style>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => { if (window.scrollY > 500) { backToTopBtn.classList.add('show'); } else { backToTopBtn.classList.remove('show'); } });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        // Scroll animation for facility cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.facility-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
