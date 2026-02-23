@@ -15,10 +15,32 @@ const Gallery = () => {
   const fetchGallery = async () => {
     try {
       const response = await axios.get('/api/gallery')
-      setItems(response.data.data)
+      const apiItems = response.data.data
+      const localItems = JSON.parse(localStorage.getItem("gallery")) || []
+      const formattedLocal = localItems.map(item => {
+        let id = item.link.split("/d/")[1]?.split("/")[0]
+        return {
+          _id: item.id,
+          filePath: `https://drive.google.com/thumbnail?id=${id}&sz=w800`,
+          title: 'Staff Upload',
+          category: 'staff'
+        }
+      })
+      setItems([...formattedLocal, ...apiItems])
     } catch (error) {
-      // If API fails, use demo images
+      // If API fails, use demo images + local ones
+      const localItems = JSON.parse(localStorage.getItem("gallery")) || []
+      const formattedLocal = localItems.map(item => {
+        let id = item.link.split("/d/")[1]?.split("/")[0]
+        return {
+          _id: item.id,
+          filePath: `https://drive.google.com/thumbnail?id=${id}&sz=w800`,
+          title: 'Staff Upload',
+          category: 'staff'
+        }
+      })
       setItems([
+        ...formattedLocal,
         { _id: '1', filePath: 'https://picsum.photos/seed/g1/800/600', title: 'Campus View', category: 'campus' },
         { _id: '2', filePath: 'https://picsum.photos/seed/g2/800/600', title: 'Sports Day', category: 'sports' },
         { _id: '3', filePath: 'https://picsum.photos/seed/g3/800/600', title: 'Science Fair', category: 'academics' },

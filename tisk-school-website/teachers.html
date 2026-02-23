@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Faculty | TISK English Medium School</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -43,7 +46,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
         }
 
         .nav-logo {
@@ -74,7 +77,8 @@
             transition: color 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--accent);
         }
 
@@ -134,11 +138,12 @@
             transition: all 0.3s;
         }
 
-        .filter-btn:hover, .filter-btn.active {
+        .filter-btn:hover,
+        .filter-btn.active {
             background: var(--accent);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59,130,246,0.3);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
         }
 
         .teachers-grid {
@@ -152,7 +157,7 @@
             border-radius: 16px;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
             opacity: 0;
             transform: translateY(30px) scale(0.9);
@@ -166,7 +171,7 @@
 
         .teacher-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .teacher-img {
@@ -224,6 +229,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav>
@@ -239,6 +245,8 @@
             <li><a href="gallery.html" class="nav-link">Gallery</a></li>
             <li><a href="mandatory-disclosure.html" class="nav-link">Disclosure</a></li>
             <li><a href="contact.html" class="nav-link">Contact</a></li>
+            <li><button class="btn btn-gold btn-admission-nav" onclick="openAdmissionModal()">Take Admission</button>
+            </li>
         </ul>
     </nav>
 
@@ -358,7 +366,8 @@
     </script>
 
     <!-- WhatsApp & Back to Top Buttons -->
-    <a href="https://wa.me/914972812349" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp">
+    <a href="https://wa.me/914972812349" class="whatsapp-float" target="_blank" rel="noopener noreferrer"
+        title="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
     <button id="backToTop" class="back-to-top" onclick="scrollToTop()" title="Back to Top">
@@ -366,13 +375,91 @@
     </button>
 
     <style>
-        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: #25d366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); transition: all 0.3s ease; z-index: 1000; text-decoration: none; }
-        .whatsapp-float:hover { background-color: #128c7e; transform: scale(1.1); box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6); }
-        .back-to-top { position: fixed; bottom: 100px; right: 30px; width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: all 0.3s ease; z-index: 999; }
-        .back-to-top.show { display: flex; animation: slideUp 0.3s ease-out; }
-        .back-to-top:hover { transform: translateY(-5px); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5); background: linear-gradient(135deg, #2563eb, #3b82f6); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .whatsapp-float { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; } .back-to-top { bottom: 80px; right: 20px; width: 45px; height: 45px; font-size: 18px; } }
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #128c7e;
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .back-to-top {
+                bottom: 80px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
     </style>
 
     <script>
@@ -380,3 +467,48 @@
         window.addEventListener('scroll', () => { if (window.scrollY > 500) { backToTopBtn.classList.add('show'); } else { backToTopBtn.classList.remove('show'); } });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
     </script>
+    <!-- SMOOTH SCROLL (LENIS) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+    <script>
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+    </script>
+    <script src="admission.js"></script>
+
+    <style>
+        .btn-admission-nav {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            background: var(--gold);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admission-nav:hover {
+            background: #fcd34d;
+            transform: translateY(-2px);
+        }
+    </style>
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react'hsan
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { FaGraduationCap, FaBars, FaTimes, FaUser } from 'react-icons/fa'
@@ -29,6 +29,7 @@ const Navbar = () => {
             <Link to="/academics" className="nav-link">Academics</Link>
             <Link to="/teachers" className="nav-link">Faculty</Link>
             <Link to="/gallery" className="nav-link">Gallery</Link>
+            <Link to="/certificates" className="nav-link">Certificates</Link>
             <Link to="/contact" className="nav-link">Contact</Link>
             <Link to="/admissions" className="nav-link">Admissions</Link>
 
@@ -69,8 +70,9 @@ const Navbar = () => {
             <Link to="/about" className="block py-2 nav-link">About</Link>
             <Link to="/academics" className="block py-2 nav-link">Academics</Link>
             <Link to="/teachers" className="block py-2 nav-link">Faculty</Link>
-            <Link to="/gallery" className="block py-2 nav-link">Gallery</Link>
-            <Link to="/contact" className="block py-2 nav-link">Contact</Link>
+            <Link to="/gallery" className="block py-2 nav-link" onClick={() => setIsOpen(false)}>Gallery</Link>
+            <Link to="/certificates" className="block py-2 nav-link" onClick={() => setIsOpen(false)}>Certificates</Link>
+            <Link to="/contact" className="block py-2 nav-link" onClick={() => setIsOpen(false)}>Contact</Link>
             <Link to="/admissions" className="block py-2 nav-link">Admissions</Link>
             {user ? (
               <>

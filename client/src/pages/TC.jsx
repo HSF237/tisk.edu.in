@@ -19,9 +19,31 @@ const TC = () => {
   const fetchTCs = async () => {
     try {
       const response = await axios.get('/api/tc')
-      setTCs(response.data.data || [])
+      const apiTCs = response.data.data || []
+      const localTCs = JSON.parse(localStorage.getItem("tc")) || []
+      const formattedLocal = localTCs.map(item => ({
+        _id: item.id,
+        studentName: 'Staff Uploaded TC',
+        tcNumber: 'N/A',
+        class: 'N/A',
+        dateOfLeaving: new Date(),
+        link: item.link,
+        isLocal: true
+      }))
+      setTCs([...formattedLocal, ...apiTCs])
     } catch (error) {
       console.error('Error fetching TCs:', error)
+      const localTCs = JSON.parse(localStorage.getItem("tc")) || []
+      const formattedLocal = localTCs.map(item => ({
+        _id: item.id,
+        studentName: 'Staff Uploaded TC',
+        tcNumber: 'N/A',
+        class: 'N/A',
+        dateOfLeaving: new Date(),
+        link: item.link,
+        isLocal: true
+      }))
+      setTCs(formattedLocal)
     } finally {
       setLoading(false)
     }
@@ -32,7 +54,7 @@ const TC = () => {
       const response = await axios.get(`/api/tc/${tcId}/download`, {
         responseType: 'blob'
       })
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
@@ -40,7 +62,7 @@ const TC = () => {
       document.body.appendChild(link)
       link.click()
       link.remove()
-      
+
       toast.success('TC downloaded successfully')
     } catch (error) {
       toast.error('Failed to download TC')
@@ -66,7 +88,7 @@ const TC = () => {
           <h2>Transfer Certificates</h2>
           <div className="divider"></div>
           <p className="text-gray-600 mt-4 text-lg">
-            {user?.role === 'admin' 
+            {user?.role === 'admin'
               ? 'Generate and manage transfer certificates'
               : 'View your transfer certificates'}
           </p>
@@ -127,12 +149,23 @@ const TC = () => {
                     <span className="font-semibold text-right max-w-xs">{tc.reason}</span>
                   </div>
 
-                  <button
-                    onClick={() => downloadTC(tc._id)}
-                    className="w-full btn btn-accent"
-                  >
-                    <FaDownload /> Download TC PDF
-                  </button>
+                  {tc.isLocal ? (
+                    <a
+                      href={tc.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full btn btn-accent flex items-center justify-center gap-2"
+                    >
+                      <FaDownload /> View TC File
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => downloadTC(tc._id)}
+                      className="w-full btn btn-accent flex items-center justify-center gap-2"
+                    >
+                      <FaDownload /> Download TC PDF
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -146,7 +179,7 @@ const TC = () => {
             <FaFilePdf className="text-5xl text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg mb-2">No Transfer Certificates Found</p>
             <p className="text-gray-500 text-sm">
-              {user?.role === 'admin' 
+              {user?.role === 'admin'
                 ? 'Generate a new TC to get started'
                 : 'You don\'t have any transfer certificates yet'}
             </p>
