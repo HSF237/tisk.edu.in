@@ -1,1 +1,0 @@
-tiskems.edu.in
