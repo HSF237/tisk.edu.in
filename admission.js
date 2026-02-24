@@ -388,10 +388,20 @@
         const btn = document.getElementById('admissionSubmitBtn');
         const originalContent = btn.innerHTML;
 
+        // 0. Verify EmailJS is ready
+        if (typeof emailjs === 'undefined') {
+            alert("The email service is not fully loaded yet. Please wait a few seconds and try again.");
+            btn.classList.remove('loading');
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+            return;
+        }
+
         // 1. Start Sending Animation
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-circle-notch fa-spin-custom"></i> Processing...';
         btn.disabled = true;
+        console.log('Starting admission submission...');
 
         // 2. Prepare Email Parameters
         const templateParams = {
@@ -407,16 +417,23 @@
         };
 
         // 3. Real Email Sending
-        emailjs.send('service_wtt6ugc', 'template_8pprar7', templateParams)
-            .then(function () {
-                console.log('REAL EMAIL SENT SUCCESS!');
-                // Transition to success state
-                animateSuccess();
-            }, function (error) {
-                console.log('EMAIL SENDING FAILED...', error);
-                // Fallback: still show success to user but log error for dev
-                animateSuccess();
-            });
+        // Add a timeout to simulate network if it's too fast, for UX
+        setTimeout(() => {
+            emailjs.send('service_wtt6ugc', 'template_8pprar7', templateParams)
+                .then(function () {
+                    console.log('REAL EMAIL SENT SUCCESS!');
+                    // Transition to success state
+                    animateSuccess();
+                }, function (error) {
+                    console.error('EMAIL SENDING FAILED...', error);
+                    alert("Failed to send email. Please check your internet connection or try again later.\nError: " + JSON.stringify(error));
+
+                    // Reset button
+                    btn.classList.remove('loading');
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                });
+        }, 500);
 
         function animateSuccess() {
             btn.innerHTML = '<i class="fas fa-paper-plane fa-bounce"></i> Delivering...';
