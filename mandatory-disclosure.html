@@ -821,6 +821,8 @@
             <li><a href="events.html" class="nav-link">Events</a></li>
             <li><a href="mandatory-disclosure.html" class="nav-link active">Disclosure</a></li>
             <li><a href="contact.html" class="nav-link">Contact</a></li>
+            <li><button class="btn btn-gold btn-admission-nav" onclick="openAdmissionModal()">Take Admission</button>
+            </li>
         </ul>
     </nav>
 
@@ -876,7 +878,7 @@
         <!-- Staff & Results Split Section -->
         <section class="container">
             <div class="section-head reveal">
-                <h2>Faculty & Performance</h2>
+                <h2>Faculty Statistics</h2>
                 <div class="divider"></div>
             </div>
 
@@ -917,30 +919,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-
-                <!-- Results Chart -->
-                <div class="chart-container reveal">
-                    <div class="percentage-circle" data-percent="97.7">
-                        <span class="percentage-text">0%</span>
-                    </div>
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <h3 style="margin-bottom: 5px;">Class X Results</h3>
-                        <p style="color: var(--text-light); font-size: 0.9rem;">Pass Percentage (Last Session)</p>
-                    </div>
-                    <div class="result-details">
-                        <p
-                            style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
-                            <span>Total Appeared:</span> <strong>45</strong></p>
-                        <p
-                            style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
-                            <span>Total Passed:</span> <strong>44</strong></p>
-                        <p
-                            style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
-                            <span>Distinction:</span> <strong>12</strong></p>
-                        <p style="display: flex; justify-content: space-between;"><span>Session:</span>
-                            <strong>Apr-Mar</strong></p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -1002,14 +980,14 @@
                     </div>
                 </div>
 
-                <!-- Land -->
-                <div class="doc-card" onclick="openDocument('land')">
+                <!-- Class X Results -->
+                <div class="doc-card" onclick="openDocument('result')">
                     <div class="doc-icon-area">
-                        <i class="fas fa-map-marked-alt"></i>
+                        <i class="fas fa-file-invoice"></i>
                     </div>
                     <div class="doc-content">
-                        <h3>Land Documents</h3>
-                        <p>Ownership and land utilization papers.</p>
+                        <h3>Class X Results</h3>
+                        <p>Academic performance records and pass percentage for the previous session.</p>
                         <span class="doc-link">View File <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </div>
@@ -1061,7 +1039,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; 2024 TISK English Medium School. All Rights Reserved.
+                &copy; 2024 TISK English Medium School. All Rights Reserved. | <a href="admin.html"
+                    style="color: inherit; text-decoration: none; opacity: 0.3;">Staff Login</a>
             </div>
         </div>
     </footer>
@@ -1077,9 +1056,6 @@
                 <div id="modalBodyContent">
                     <!-- Content injected via JS -->
                 </div>
-                <button class="download-btn" onclick="alert('Downloading simulated PDF...')">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
             </div>
         </div>
     </div>
@@ -1091,7 +1067,7 @@
             'fire': { title: 'Fire NOC', seal: 'Fire Safe', img: 'https://picsum.photos/seed/fire/600/400', desc: 'Fire safety compliance clearance.' },
             'water': { title: 'Water & Sanitation', seal: 'Hygiene Certified', img: 'https://picsum.photos/seed/water/600/400', desc: 'Potable water and sanitation clearance.' },
             'affiliation': { title: 'CBSE Affiliation Letter', seal: 'CBSE Approved', img: 'https://picsum.photos/seed/aff/600/400', desc: 'Affiliation No: 931267.' },
-            'land': { title: 'Land Documents', seal: 'Verified Title', img: 'https://picsum.photos/seed/land/600/400', desc: 'Land ownership and utilization certificate.' },
+            'result': { title: 'Class X Results', seal: 'Academic Record', img: 'https://picsum.photos/seed/result/600/400', desc: 'Official pass percentage and performance statistics for Class X.' },
             'society': { title: 'Society Registration', seal: 'Registered Body', img: 'https://picsum.photos/seed/soc/600/400', desc: 'Trust/Society registration certificate.' }
         };
 
@@ -1208,6 +1184,27 @@
 
         requestAnimationFrame(raf);
     </script>
+    <script src="admission.js"></script>
+
+    <style>
+        .btn-admission-nav {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            background: var(--gold);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admission-nav:hover {
+            background: #fcd34d;
+            transform: translateY(-2px);
+        }
+    </style>
 </body>
 
 </html>
