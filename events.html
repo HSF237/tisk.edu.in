@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events | TISK English Medium School</title>
+    <link rel="icon" type="image/png" href="logo.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,6 +81,51 @@
         .nav-link:hover,
         .nav-link.active {
             color: var(--accent);
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.6rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border-bottom: 2px solid var(--accent);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .nav-links li:last-child {
+                margin-bottom: 0;
+            }
+
+            .btn-admission-nav {
+                margin-left: 0 !important;
+                width: 100%;
+            }
         }
 
         .page-hero {
@@ -240,7 +286,10 @@
         <a href="index.html" class="nav-logo">
             <i class="fas fa-graduation-cap"></i> TISK EMS
         </a>
-        <ul class="nav-links">
+        <div class="mobile-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links" id="navLinks">
             <li><a href="index.html" class="nav-link">Home</a></li>
             <li><a href="about.html" class="nav-link">About</a></li>
             <li><a href="academics.html" class="nav-link">Academics</a></li>
@@ -466,6 +515,10 @@
     </style>
 
     <script>
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
         const backToTopBtn = document.getElementById('backToTop');
         window.addEventListener('scroll', () => { if (window.scrollY > 500) { backToTopBtn.classList.add('show'); } else { backToTopBtn.classList.remove('show'); } });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
