@@ -31,9 +31,71 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #f8fafc;
+            background: #f1f5f9;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(213, 94%, 94%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(43, 96%, 90%, 1) 0, transparent 50%),
+                linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
             color: var(--text-main);
             line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ... [Existing Styles] ... */
+
+        .card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 249, 255, 0.8));
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+            width: 80px;
+            height: 80px;
+            background: rgba(59, 130, 246, 0.08);
+            /* Light blue circle */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        .card:hover .card-icon {
+            background: var(--accent);
+            color: white;
+            transform: rotate(360deg);
         }
 
         h1,
@@ -166,12 +228,6 @@
             margin-bottom: 80px;
         }
 
-        .about-img {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-            animation: fadeInLeft 0.8s ease-out;
-        }
 
         @keyframes fadeInLeft {
             from {
@@ -192,8 +248,13 @@
             transition: transform 0.5s;
         }
 
-        .about-img:hover img {
-            transform: scale(1.1);
+        .about-img {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+            animation: fadeInLeft 0.8s ease-out;
+            border: 8px solid white;
+            /* Polaroid style border */
         }
 
         .about-content {
@@ -225,17 +286,22 @@
         }
 
         .card {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            /* Very light blue tint */
             border-radius: 16px;
             padding: 35px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            /* Softer shadow */
             margin-bottom: 30px;
             transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            /* Subtle blue border */
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+            /* Blue tinted shadow on hover */
         }
 
         .card-icon {
@@ -252,17 +318,20 @@
 
         /* Principal Section */
         .principal-section {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
             border-radius: 16px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Softer shadow */
             margin: 40px 0;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .principal-content {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            /* Aligns items to the top */
             gap: 40px;
             max-width: 800px;
             margin: 0 auto;
@@ -463,43 +532,98 @@
                 <img src="https://picsum.photos/seed/school_front/600/400" alt="School Building">
             </div>
             <div class="about-content">
-                <h3>A Legacy Since 1988</h3>
+                <h3>About TISK English Medium School</h3>
                 <p>
-                    TISK English Medium School is a private, co-educational institution located in
-                    Kovvapuram, Kunhimangalam, nestled in the serene surroundings of Kannur.
+                    TISK English Medium School, established in 1988 at Kovvappuram, Kannur District, Kerala, is a
+                    reputed CBSE-affiliated institution dedicated to delivering quality education from Grade I to Grade
+                    X.
                 </p>
                 <p>
-                    <strong>Managed by:</strong> Manshau Thazkiyathi Sunniyathil Islamiya Society
+                    With over 35 years of academic excellence, the school has consistently maintained 100% pass results
+                    in the CBSE Class X Board Examinations, with many students securing top marks and First Class
+                    distinctions.
                 </p>
                 <p>
-                    <strong>CBSE Affiliated:</strong> Affiliation No: 931267 | <strong>EST:</strong> 1988
+                    Currently serving around 500 students, TISK provides a safe, disciplined, and inspiring learning
+                    environment supported by qualified and experienced teaching and non-teaching staff.
                 </p>
-                <p>
-                    Our school has been a beacon of educational excellence, committed to nurturing
-                    young minds and developing globally competent citizens. We blend traditional
-                    values with modern pedagogical approaches.
-                </p>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px; color: var(--primary); font-size: 1.2rem;">Holistic
+                    Development</h4>
+                <p>Our institution believes in the holistic development of every child by balancing:</p>
+                <ul
+                    style="list-style: none; padding: 0; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Academic Excellence</li>
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Co-Curricular Activities</li>
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Sports & Games</li>
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Leadership Development</li>
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Value-Based Education</li>
+                    <li style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-check-circle"
+                            style="color: var(--gold);"></i> Social Responsibility</li>
+                </ul>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px; color: var(--primary); font-size: 1.2rem;">Campus
+                    Facilities</h4>
+                <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-chalkboard-teacher" style="color: var(--accent); width: 20px;"></i> Modern
+                        Classrooms</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-flask" style="color: var(--accent); width: 20px;"></i> Well-equipped Science
+                        Laboratory</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-laptop-code" style="color: var(--accent); width: 20px;"></i> Computer
+                        Laboratory</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-book" style="color: var(--accent); width: 20px;"></i> Enriched Library</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-shapes" style="color: var(--accent); width: 20px;"></i> Kindergarten Section
+                        with Ideal KG Curriculum</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i
+                            class="fas fa-building" style="color: var(--accent); width: 20px;"></i> Upgraded
+                        Administrative Block</li>
+                </ul>
             </div>
         </div>
 
         <div class="card">
-            <i class="fas fa-graduation-cap card-icon"></i>
+            <i class="fas fa-eye card-icon"></i>
             <h3>Our Vision</h3>
             <p>
-                To be a leading educational institution that empowers students to achieve
-                excellence in academics, character, and life skills, preparing them to
-                be responsible global citizens.
+                To create a nurturing and future-ready learning environment that empowers students to become critical
+                thinkers, compassionate leaders, and responsible global citizens, inspired by innovation, integrity, and
+                excellence.
             </p>
         </div>
 
         <div class="card">
-            <i class="fas fa-award card-icon"></i>
+            <i class="fas fa-bullseye card-icon"></i>
             <h3>Our Mission</h3>
-            <p>
-                To provide quality education through innovative teaching methods, holistic
-                development programs, and a nurturing environment that fosters creativity,
-                critical thinking, and ethical values.
-            </p>
+            <ul style="list-style: none; padding: 0; color: var(--text-light); line-height: 1.8;">
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To provide high-quality
+                    CBSE education for students from Grade I to Grade X.</li>
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To foster intellectual,
+                    emotional, social, and ethical development.</li>
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To encourage
+                    innovation, creativity, and critical thinking through experiential learning.</li>
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To promote inclusivity,
+                    respect, and diversity within a supportive school community.</li>
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To instill values of
+                    integrity, empathy, discipline, and responsible citizenship.</li>
+                <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;"><i
+                        class="fas fa-check" style="color: var(--accent); margin-top: 5px;"></i> To prepare students to
+                    excel confidently in a rapidly evolving global world.</li>
+            </ul>
         </div>
 
         <!-- Principal Section -->
@@ -514,28 +638,59 @@
                         onerror="this.src='https://via.placeholder.com/200x200/3b82f6/ffffff?text=Principal'">
                 </div>
                 <div class="principal-info">
-                    <div class="principal-name">Principal Name</div>
+                    <div class="principal-name">Mr. Khasim P.K.</div>
                     <div class="principal-title">Principal, TISK English Medium School</div>
                     <div class="principal-bio">
-                        <p>
-                            With a distinguished career in education spanning over two decades, our Principal leads TISK
-                            English Medium School
-                            with unwavering dedication and a clear vision to provide holistic education that prepares
-                            students for the challenges
-                            of tomorrow. Under their exemplary guidance, the school has achieved remarkable milestones
-                            in academic excellence,
-                            character development, and overall student growth.
-                        </p>
-                        <p style="margin-top: 15px;">
-                            The Principal's commitment to fostering a nurturing learning environment, combined with
-                            innovative
-                            teaching methodologies and a focus on individual student needs, ensures that every child
-                            receives the attention
-                            and support required to excel both academically and personally. Their leadership philosophy
-                            emphasizes the
-                            integration of traditional values with modern educational practices, creating well-rounded
-                            individuals
-                            ready to contribute meaningfully to society.
+                        <p><strong>Dear Students, Parents, and Well-Wishers,</strong></p>
+
+                        <p>It gives me immense pride and pleasure to welcome you to TISK English Medium School,
+                            Kovvappuram — an institution that has been shaping young minds with dedication and
+                            excellence since its establishment in 1988.</p>
+
+                        <p>For more than three decades, TISK has stood as a beacon of quality education in Kannur
+                            district, committed to academic excellence and holistic development. Affiliated to CBSE, our
+                            school provides a strong academic foundation while nurturing creativity, character, and
+                            confidence among our students.</p>
+
+                        <p>The academic year 2022–23 has been a year of joyful learning, vibrant celebrations, and
+                            remarkable achievements. Our students once again brought laurels to the institution by
+                            securing 100% pass results in the CBSE Class X Board Examination, with a significant number
+                            achieving First Class and top scores. Such consistent success reflects the dedication of our
+                            students, the commitment of our teachers, and the strong support of our parents.</p>
+
+                        <p>Beyond academics, we believe education must prepare children for life. Through
+                            well-structured club activities, art festivals, Olympiads, exhibitions, sports meets,
+                            educational tours, and leadership opportunities like the School Parliament Election, we
+                            empower students to discover their talents and develop leadership qualities.</p>
+
+                        <p>Our Science, Mathematics, Language, Social Science, and Mazhavil (Arabic) Clubs actively
+                            promote experiential learning. Initiatives such as Harithanganam (organic farming
+                            awareness), Anti-Drug Campaigns, Anti-Poverty Day activities, CPR awareness sessions, and
+                            visits to old age homes help instill values of compassion, social responsibility, and
+                            humanity in our children.</p>
+
+                        <p>Infrastructure development has also been a priority. The inauguration of our new
+                            Administrative Block and the upgradation of our Computer Lab, Science Lab, and Library
+                            facilities reflect our commitment to providing a modern and resourceful learning
+                            environment.</p>
+
+                        <p>At TISK, we focus on nurturing critical thinkers, compassionate leaders, and responsible
+                            citizens. Our aim is not only to help students score high marks but also to help them grow
+                            into confident individuals who can contribute positively to society.</p>
+
+                        <p>As we move forward, we remain committed to excellence, innovation, and value-based education.
+                            Together, with the cooperation of parents, staff, and the community, we will continue to
+                            create an environment where every child can dream, explore, and succeed.</p>
+
+                        <p>Let us continue this journey of learning and growth with confidence and determination.</p>
+
+                        <br>
+                        <p class="signature">
+                            <strong>Warm Regards,</strong><br>
+                            <span style="font-size: 1.1rem; color: var(--primary);">Khasim P.K.</span><br>
+                            <span style="font-size: 0.9rem; color: #64748b;">Principal<br>
+                                TISK English Medium School<br>
+                                Kovvappuram, Kannur, Kerala</span>
                         </p>
                     </div>
                 </div>
@@ -583,7 +738,8 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 TISK English Medium School. All Rights Reserved. | CBSE Affiliation No: 931267</p>
+        <p>&copy; 2026 TISK English Medium School. All Rights Reserved. | CBSE Affiliation No: 931267 | <a
+                href="admin.html" style="color: inherit; text-decoration: none; opacity: 0.3;">Staff Login</a></p>
     </footer>
 
     <!-- WhatsApp Floating Button -->

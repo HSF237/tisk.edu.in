@@ -268,6 +268,8 @@
             <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
             <li><a href="mandatory-disclosure.html" class="nav-link">Disclosure</a></li>
             <li><a href="contact.html" class="nav-link">Contact</a></li>
+            <li><button class="btn btn-gold btn-admission-nav" onclick="openAdmissionModal()">Take Admission</button>
+            </li>
         </ul>
     </nav>
 
@@ -532,6 +534,27 @@
 
         requestAnimationFrame(raf);
     </script>
+    <script src="admission.js"></script>
+
+    <style>
+        .btn-admission-nav {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            background: var(--gold);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admission-nav:hover {
+            background: #fcd34d;
+            transform: translateY(-2px);
+        }
+    </style>
 </body>
 
 </html>
