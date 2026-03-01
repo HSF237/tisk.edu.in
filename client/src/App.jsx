@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -89,7 +90,11 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/certificates" element={<Certificates />} />
-                <Route path="/admin-7h3k92" element={<AdminHidden />} />
+                <Route path="/admin-7h3k92" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminHidden />
+                  </ProtectedRoute>
+                } />
               </Routes>
             </main>
             <Footer />

@@ -412,53 +412,87 @@
     </footer>
 
     <script>
-        // Gallery lightbox
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightboxImg');
+        async function loadGallery() {
+            const grid = document.getElementById('galleryGrid');
+            try {
+                const res = await fetch('http://localhost:5000/api/gallery');
+                const data = await res.json();
 
-        galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const imgSrc = item.getAttribute('data-src');
-                lightboxImg.src = imgSrc;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                if (data.success && data.data.length > 0) {
+                    grid.innerHTML = data.data.map(item => `
+                        <div class="gallery-item" data-src="http://localhost:5000/${item.filePath}">
+                            <img src="http://localhost:5000/${item.filePath}" alt="${item.title}">
+                            <div class="gallery-overlay">
+                                <div class="gallery-title">${item.title}</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Re-bind click events
+                    bindLightbox();
+                    // Re-bind scroll animation
+                    bindObserver();
+                }
+            } catch (err) {
+                console.error('Failed to load gallery', err);
+            }
+        }
+
+        function bindLightbox() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const imgSrc = item.getAttribute('data-src');
+                    lightboxImg.src = imgSrc;
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
             });
-        });
+        }
+
+        function bindObserver() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            galleryItems.forEach(item => {
+                observer.observe(item);
+            });
+        }
 
         function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) {
                 closeLightbox();
             }
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
+            const lightbox = document.getElementById('lightbox');
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
                 closeLightbox();
             }
         });
 
-        // Scroll animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, index * 100);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        galleryItems.forEach(item => {
-            observer.observe(item);
-        });
+        // Initial Load
+        loadGallery();
     </script>
+
 
     <!-- WhatsApp & Back to Top Buttons -->
     <a href="https://wa.me/914972812349" class="whatsapp-float" target="_blank" rel="noopener noreferrer"

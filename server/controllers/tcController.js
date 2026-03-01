@@ -165,7 +165,7 @@ const generateTCPDF = async (tc) => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
     const pdfDir = path.join(__dirname, '../uploads/tc');
-    
+
     if (!fs.existsSync(pdfDir)) {
       fs.mkdirSync(pdfDir, { recursive: true });
     }
@@ -215,10 +215,10 @@ const generateTCPDF = async (tc) => {
 
     // Date
     doc.text(`Date: ${formattedToday}`, startX, y);
-    
+
     // Class Teacher
     doc.text('Class Teacher', (startX + endX) / 2 - 50, y);
-    
+
     // Principal
     doc.text('Principal', endX - 50, y);
 
@@ -250,4 +250,119 @@ const generateTCPDF = async (tc) => {
     });
   });
 };
+
+// @desc    Create manual TC (Google Drive link)
+// @route   POST /api/tc/manual
+// @access  Private/Admin
+export const createManualTC = async (req, res) => {
+  try {
+    const { studentName, admissionNumber, class: studentClass, dateOfLeaving, reason, link } = req.body;
+
+    if (!link) {
+      return res.status(400).json({
+        success: false,
+        message: 'Google Drive link is required'
+      });
+    }
+
+    const tc = await TC.create({
+      studentName,
+      admissionNumber,
+      class: studentClass,
+      dateOfBirth: new Date(),
+      parentName: 'N/A',
+      dateOfLeaving: dateOfLeaving || new Date(),
+      reason: reason || 'N/A',
+      link,
+      generatedBy: req.user.id
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Manual TC uploaded successfully',
+      data: tc
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Upload existing TC PDF file
+// @route   POST /api/tc/upload
+// @access  Private/Admin
+export const uploadTCFile = async (req, res) => {
+  try {
+    const { studentName, admissionNumber, class: studentClass, dateOfLeaving, reason } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'TC PDF file is required'
+      });
+    }
+
+    if (!studentName || !admissionNumber || !studentClass) {
+      return res.status(400).json({
+        success: false,
+        message: 'Student name, admission number and class are required'
+      });
+    }
+
+    const tc = await TC.create({
+      studentName,
+      admissionNumber,
+      class: studentClass,
+      dateOfBirth: new Date(),
+      parentName: 'N/A',
+      dateOfLeaving: dateOfLeaving || new Date(),
+      reason: reason || 'N/A',
+      pdfPath: req.file.path,
+      generatedBy: req.user.id
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'TC file uploaded successfully',
+      data: tc
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Search TC by admission number (Public)
+// @route   GET /api/tc/search/:admNo
+// @access  Public
+export const searchTCByAdmNo = async (req, res) => {
+  try {
+    const { admNo } = req.params;
+
+    const tc = await TC.findOne({ admissionNumber: admNo })
+      .select('studentName admissionNumber class dateOfLeaving pdfPath tcNumber');
+
+    if (!tc) {
+      return res.status(404).json({
+        success: false,
+        message: 'No Transfer Certificate found for this admission number'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: tc
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 

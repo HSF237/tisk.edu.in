@@ -2,8 +2,7 @@ import { createContext, useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-// Configure axios defaults
-axios.defaults.baseURL = '/api'
+// Attach auth token to every request
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {

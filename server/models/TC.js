@@ -57,6 +57,10 @@ const tcSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  link: {
+    type: String,
+    default: ''
+  },
   generatedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -71,11 +75,11 @@ const tcSchema = new mongoose.Schema({
 });
 
 // Generate TC number before saving
-tcSchema.pre('save', async function(next) {
+tcSchema.pre('save', async function (next) {
   if (!this.tcNumber) {
     const year = new Date().getFullYear();
-    const count = await mongoose.model('TC').countDocuments({ 
-      createdAt: { $gte: new Date(year, 0, 1) } 
+    const count = await mongoose.model('TC').countDocuments({
+      createdAt: { $gte: new Date(year, 0, 1) }
     });
     this.tcNumber = `TC${year}${String(count + 1).padStart(4, '0')}`;
   }

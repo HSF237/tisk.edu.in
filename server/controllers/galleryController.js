@@ -58,21 +58,23 @@ export const getGalleryItemById = async (req, res) => {
 // @access  Private/Admin
 export const createGalleryItem = async (req, res) => {
   try {
-    const { title, description, type, category } = req.body;
+    const { title, description, type, category, filePath } = req.body;
 
-    if (!req.file) {
+    if (!req.file && !filePath) {
       return res.status(400).json({
         success: false,
-        message: 'Image or video file is required'
+        message: 'Image/video file OR a link is required'
       });
     }
+
+    const finalPath = req.file ? req.file.path : filePath;
 
     const galleryItem = await Gallery.create({
       title,
       description,
       type: type || 'image',
       category: category || 'general',
-      filePath: req.file.path,
+      filePath: finalPath,
       uploadedBy: req.user.id
     });
 

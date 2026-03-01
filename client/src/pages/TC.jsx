@@ -3,47 +3,24 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
-import { FaFilePdf, FaDownload, FaQrcode } from 'react-icons/fa'
+import { FaFilePdf, FaDownload, FaExternalLinkAlt } from 'react-icons/fa'
 
 const TC = () => {
   const { user } = useAuth()
   const [tcs, setTCs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchAdmission, setSearchAdmission] = useState('')
 
   useEffect(() => {
-    if (user) {
-      fetchTCs()
-    }
-  }, [user])
+    fetchTCs()
+  }, [])
 
   const fetchTCs = async () => {
     try {
       const response = await axios.get('/api/tc')
-      const apiTCs = response.data.data || []
-      const localTCs = JSON.parse(localStorage.getItem("tc")) || []
-      const formattedLocal = localTCs.map(item => ({
-        _id: item.id,
-        studentName: 'Staff Uploaded TC',
-        tcNumber: 'N/A',
-        class: 'N/A',
-        dateOfLeaving: new Date(),
-        link: item.link,
-        isLocal: true
-      }))
-      setTCs([...formattedLocal, ...apiTCs])
+      setTCs(response.data.data || [])
     } catch (error) {
       console.error('Error fetching TCs:', error)
-      const localTCs = JSON.parse(localStorage.getItem("tc")) || []
-      const formattedLocal = localTCs.map(item => ({
-        _id: item.id,
-        studentName: 'Staff Uploaded TC',
-        tcNumber: 'N/A',
-        class: 'N/A',
-        dateOfLeaving: new Date(),
-        link: item.link,
-        isLocal: true
-      }))
-      setTCs(formattedLocal)
     } finally {
       setLoading(false)
     }
@@ -54,7 +31,6 @@ const TC = () => {
       const response = await axios.get(`/api/tc/${tcId}/download`, {
         responseType: 'blob'
       })
-
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
@@ -62,12 +38,16 @@ const TC = () => {
       document.body.appendChild(link)
       link.click()
       link.remove()
-
       toast.success('TC downloaded successfully')
     } catch (error) {
       toast.error('Failed to download TC')
     }
   }
+
+  const filteredTCs = tcs.filter((tc) => {
+    if (!searchAdmission.trim()) return true
+    return tc.admissionNumber?.toLowerCase().includes(searchAdmission.trim().toLowerCase())
+  })
 
   if (loading) {
     return (
@@ -83,107 +63,74 @@ const TC = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="section-head"
+          className="section-head text-center mb-16"
         >
-          <h2>Transfer Certificates</h2>
-          <div className="divider"></div>
+          <h2 className="text-4xl font-bold text-primary">Transfer Certificates</h2>
+          <div className="divider mx-auto w-24 h-1 bg-accent my-4"></div>
           <p className="text-gray-600 mt-4 text-lg">
-            {user?.role === 'admin'
-              ? 'Generate and manage transfer certificates'
-              : 'View your transfer certificates'}
+            View and download official transfer certificates. Verified and stored globally.
           </p>
         </motion.div>
 
-        {user?.role === 'admin' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card mb-8"
-          >
-            <h3 className="text-xl font-bold text-primary mb-4">Generate New TC</h3>
-            <p className="text-gray-600 mb-4">
-              To generate a new Transfer Certificate, please use the admin dashboard or contact the system administrator.
-            </p>
-            <p className="text-sm text-gray-500">
-              Note: TC generation requires student details and will create a PDF with QR code verification.
-            </p>
-          </motion.div>
-        )}
+        <div className="max-w-md mx-auto mb-10">
+          <input
+            type="text"
+            value={searchAdmission}
+            onChange={(e) => setSearchAdmission(e.target.value)}
+            placeholder="Search by Admission Number"
+            className="w-full px-4 py-3 rounded-2xl border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/60"
+          />
+        </div>
 
-        {tcs.length > 0 ? (
-          <div className="grid md:grid-cols-2 gap-6">
-            {tcs.map((tc) => (
+        {filteredTCs.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredTCs.map((tc) => (
               <motion.div
                 key={tc._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="card"
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100 flex flex-col items-center text-center transition-all"
               >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-primary mb-2">{tc.studentName}</h3>
-                    <p className="text-gray-600 text-sm">TC Number: {tc.tcNumber}</p>
-                    <p className="text-gray-600 text-sm">Class: {tc.class}</p>
-                    <p className="text-gray-600 text-sm">
-                      Date of Leaving: {new Date(tc.dateOfLeaving).toLocaleDateString()}
-                    </p>
-                  </div>
-                  {tc.qrCode && (
-                    <div className="bg-gray-100 p-2 rounded">
-                      <img src={tc.qrCode} alt="QR Code" className="w-20 h-20" />
-                    </div>
-                  )}
+                <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 text-accent">
+                  <FaFilePdf size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-primary mb-2">{tc.studentName}</h3>
+                <div className="space-y-1 mb-6 text-sm text-gray-500">
+                  <p>TC Number: <span className="font-semibold text-gray-700">{tc.tcNumber}</span></p>
+                  <p>Class: <span className="font-semibold text-gray-700">{tc.class}</span></p>
+                  <p>Date: <span className="font-semibold text-gray-700">{new Date(tc.dateOfLeaving).toLocaleDateString()}</span></p>
                 </div>
 
-                <div className="border-t pt-4 mt-4">
-                  <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
-                    <span>Admission Number:</span>
-                    <span className="font-semibold">{tc.admissionNumber}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
-                    <span>Parent Name:</span>
-                    <span className="font-semibold">{tc.parentName}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-                    <span>Reason:</span>
-                    <span className="font-semibold text-right max-w-xs">{tc.reason}</span>
-                  </div>
-
-                  {tc.isLocal ? (
-                    <a
-                      href={tc.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full btn btn-accent flex items-center justify-center gap-2"
-                    >
-                      <FaDownload /> View TC File
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => downloadTC(tc._id)}
-                      className="w-full btn btn-accent flex items-center justify-center gap-2"
-                    >
-                      <FaDownload /> Download TC PDF
-                    </button>
-                  )}
-                </div>
+                {tc.link ? (
+                  <a
+                    href={tc.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-accent text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-accent-light transition-all shadow-md active:scale-95"
+                  >
+                    <FaExternalLinkAlt /> View Document
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => downloadTC(tc._id)}
+                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-light transition-all shadow-md active:scale-95"
+                  >
+                    <FaDownload /> Download PDF
+                  </button>
+                )}
               </motion.div>
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card text-center py-12"
-          >
-            <FaFilePdf className="text-5xl text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg mb-2">No Transfer Certificates Found</p>
-            <p className="text-gray-500 text-sm">
-              {user?.role === 'admin'
-                ? 'Generate a new TC to get started'
-                : 'You don\'t have any transfer certificates yet'}
+          <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-dashed border-gray-300">
+            <FaFilePdf className="text-6xl text-gray-200 mx-auto mb-4" />
+            <p className="text-gray-400 text-lg">
+              {searchAdmission.trim()
+                ? 'No transfer certificates found for this admission number.'
+                : 'No transfer certificates found for your account.'}
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

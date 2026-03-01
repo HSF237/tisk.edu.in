@@ -1,78 +1,128 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
+import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
 const AdminHidden = () => {
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
+
+  // Gallery State
   const [galleryLink, setGalleryLink] = useState('')
-  const [tcLink, setTCLink] = useState('')
-  const [certLink, setCertLink] = useState('')
-  const [certType, setCertType] = useState('Fire Safety Certificate')
+  const [galleryTitle, setGalleryTitle] = useState('')
 
-  const addGallery = () => {
-    if (!galleryLink) return toast.error('Please enter a link')
-    let gallery = JSON.parse(localStorage.getItem("gallery")) || []
-    gallery.push({ id: Date.now(), link: galleryLink })
-    localStorage.setItem("gallery", JSON.stringify(gallery))
-    setGalleryLink('')
-    toast.success("Gallery Image Added Locally")
+  // TC State
+  const [tcFile, setTCFile] = useState(null)
+  const [studentName, setStudentName] = useState('')
+  const [tcClass, setTCClass] = useState('')
+  const [admissionNo, setAdmissionNo] = useState('')
+
+  const addGallery = async () => {
+    if (!galleryLink || !galleryTitle) return toast.error('Please enter link and title')
+    setLoading(true)
+    try {
+      await axios.post('/api/gallery', {
+        title: galleryTitle,
+        filePath: galleryLink,
+        category: 'general'
+      })
+      setGalleryLink('')
+      setGalleryTitle('')
+      toast.success('Gallery Image Added to Database')
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to add to database')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const addTC = () => {
-    if (!tcLink) return toast.error('Please enter a link')
-    let tc = JSON.parse(localStorage.getItem("tc")) || []
-    tc.push({ id: Date.now(), link: tcLink })
-    localStorage.setItem("tc", JSON.stringify(tc))
-    setTCLink('')
-    toast.success("TC File Added Locally")
-  }
+  const addTC = async () => {
+    if (!tcFile || !studentName || !admissionNo) {
+      return toast.error('Please provide student name, admission number and select a TC PDF')
+    }
+    setLoading(true)
+    try {
+      const formData = new FormData()
+      formData.append('studentName', studentName)
+      formData.append('admissionNumber', admissionNo)
+      formData.append('class', tcClass || 'N/A')
+      formData.append('tcFile', tcFile)
 
-  const addCertificate = () => {
-    if (!certLink) return toast.error('Please enter a link')
-    let certs = JSON.parse(localStorage.getItem("certificates")) || []
-    certs.push({ id: Date.now(), type: certType, link: certLink })
-    localStorage.setItem("certificates", JSON.stringify(certs))
-    setCertLink('')
-    toast.success("Certificate Added Locally")
+      await axios.post('/api/tc/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+
+      setTCFile(null)
+      setStudentName('')
+      setTCClass('')
+      setAdmissionNo('')
+      toast.success('TC file uploaded to database')
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to upload TC')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div className="pt-24 min-h-screen bg-gray-100">
       <div className="container mx-auto px-4 py-12">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8"
+          className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8"
         >
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-primary">Secret Staff Admin</h1>
-            <p className="text-gray-500 mt-2">Upload Google Drive links for website updates</p>
-            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mt-4 text-left">
-              <p className="text-amber-700 text-sm">
-                <strong>Note:</strong> Since this is the "Easy Method", these links are stored in your browser's local storage. 
-                To make them visible to everyone, you will need to sync these to the global database later.
-              </p>
-            </div>
+            <h1 className="text-3xl font-bold text-primary">Professional Staff Admin</h1>
+            <p className="text-gray-500 mt-2">Upload Google Drive links directly to the school database</p>
+
+            {!user || user.role !== 'admin' ? (
+              <div className="bg-red-50 border-l-4 border-red-400 p-6 mt-6 text-left">
+                <p className="text-red-700 font-semibold">Access Denied</p>
+                <p className="text-red-600 text-sm mt-1">
+                  You must be logged in as an <strong>Admin</strong> to save changes.
+                </p>
+                <a href="/login" className="inline-block mt-4 bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-red-700 transition-all">
+                  Click here to Login
+                </a>
+              </div>
+            ) : (
+              <div className="bg-green-50 border-l-4 border-green-400 p-4 mt-4 text-left">
+                <p className="text-green-700 text-sm">
+                  <strong>Authorized:</strong> You can now save updates globally.
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-12">
             {/* Gallery Section */}
             <section className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 📸 Add Gallery Image
               </h2>
-              <div className="flex flex-col gap-3">
-                <input 
-                  type="text" 
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={galleryTitle}
+                  onChange={(e) => setGalleryTitle(e.target.value)}
+                  placeholder="Image Title (e.g. Science Fair 2024)"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200"
+                />
+                <input
+                  type="text"
                   value={galleryLink}
                   onChange={(e) => setGalleryLink(e.target.value)}
                   placeholder="Paste Google Drive Image Link"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-accent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200"
                 />
-                <button 
+                <button
+                  disabled={loading}
                   onClick={addGallery}
-                  className="bg-primary text-white py-3 rounded-xl font-semibold hover:bg-primary/90 transition-all active:scale-95"
+                  className="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-primary/90 disabled:opacity-50"
                 >
-                  Add to Gallery
+                  {loading ? 'Adding...' : 'Save to Gallery'}
                 </button>
               </div>
             </section>
@@ -82,60 +132,41 @@ const AdminHidden = () => {
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 📄 Add TC File
               </h2>
-              <div className="flex flex-col gap-3">
-                <input 
-                  type="text" 
-                  value={tcLink}
-                  onChange={(e) => setTCLink(e.target.value)}
-                  placeholder="Paste Google Drive TC Link"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-accent outline-none transition-all"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <input
+                  type="text"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  placeholder="Student Name"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200"
                 />
-                <button 
+                <input
+                  type="text"
+                  value={admissionNo}
+                  onChange={(e) => setAdmissionNo(e.target.value)}
+                  placeholder="Admission Number"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200"
+                />
+              </div>
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => setTCFile(e.target.files?.[0] || null)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white"
+                />
+                <p className="text-xs text-gray-500">
+                  Upload the signed TC PDF (max 5MB). It will be stored permanently in the system.
+                </p>
+                <button
+                  disabled={loading}
                   onClick={addTC}
-                  className="bg-accent text-white py-3 rounded-xl font-semibold hover:bg-accent/90 transition-all active:scale-95"
+                  className="w-full bg-accent text-white py-3 rounded-xl font-semibold hover:bg-accent/90 disabled:opacity-50"
                 >
-                  Add TC File
+                  {loading ? 'Uploading...' : 'Upload TC File'}
                 </button>
               </div>
             </section>
-
-            {/* Certificates Section */}
-            <section className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                📑 Add Certificate
-              </h2>
-              <div className="flex flex-col gap-3">
-                <select 
-                  value={certType}
-                  onChange={(e) => setCertType(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-accent outline-none transition-all bg-white"
-                >
-                  <option>Fire Safety Certificate</option>
-                  <option>Ground Safety Certificate</option>
-                  <option>Building Safety Certificate</option>
-                  <option>Sanitation Certificate</option>
-                </select>
-                <input 
-                  type="text" 
-                  value={certLink}
-                  onChange={(e) => setCertLink(e.target.value)}
-                  placeholder="Paste Google Drive Certificate Link"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-accent outline-none transition-all"
-                />
-                <button 
-                  onClick={addCertificate}
-                  className="bg-gold text-white py-3 rounded-xl font-semibold hover:bg-gold/90 transition-all active:scale-95"
-                >
-                  Add Certificate
-                </button>
-              </div>
-            </section>
-          </div>
-
-          <div className="mt-12 pt-8 border-t text-center">
-            <p className="text-sm text-gray-400 italic">
-              "Easy Google Drive Method" implemented as requested.
-            </p>
           </div>
         </motion.div>
       </div>

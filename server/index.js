@@ -14,6 +14,7 @@ import teacherRoutes from './routes/teachers.js';
 import studentRoutes from './routes/students.js';
 import noticeRoutes from './routes/notices.js';
 import galleryRoutes from './routes/gallery.js';
+import certificateRoutes from './routes/certificates.js';
 
 // Load environment variables
 dotenv.config();
@@ -37,8 +38,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tisk_scho
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ MongoDB Connected'))
-.catch((err) => console.error('❌ MongoDB Connection Error:', err));
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch((err) => console.error('❌ MongoDB Connection Error:', err));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -49,6 +50,7 @@ app.use('/api/teachers', teacherRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/certificates', certificateRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {
@@ -58,10 +60,10 @@ app.get('/api/health', (req, res) => {
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
-    message: 'Something went wrong!', 
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined 
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong!',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
