@@ -415,13 +415,13 @@
         async function loadGallery() {
             const grid = document.getElementById('galleryGrid');
             try {
-                const res = await fetch('http://localhost:5000/api/gallery');
+                const res = await fetch('http://localhost:5001/api/gallery');
                 const data = await res.json();
 
                 if (data.success && data.data.length > 0) {
                     grid.innerHTML = data.data.map(item => `
-                        <div class="gallery-item" data-src="http://localhost:5000/${item.filePath}">
-                            <img src="http://localhost:5000/${item.filePath}" alt="${item.title}">
+                        <div class="gallery-item" data-src="http://localhost:5001/${item.filePath}">
+                            <img src="http://localhost:5001/${item.filePath}" alt="${item.title}">
                             <div class="gallery-overlay">
                                 <div class="gallery-title">${item.title}</div>
                             </div>
