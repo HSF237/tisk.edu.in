@@ -311,7 +311,7 @@
     </div>
 
     <script>
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:5001/api'
             : 'https://tisk-backend.onrender.com/api';
         let currentUser = null;
@@ -324,7 +324,7 @@
 
         async function checkAuth() {
             try {
-                const res = await fetch(`${API_BASE}/auth/me`, {
+                const res = await fetch(`${API_URL}/auth/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -349,7 +349,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch(`${API_URL}/api/auth/login`, {
+                const res = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -394,7 +394,7 @@
 
         async function loadData(type) {
             try {
-                const res = await fetch(`${API_URL}/api/${type}`, {
+                const res = await fetch(`${API_URL}/${type}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -424,7 +424,7 @@
                 formData.append('title', 'Gallery Image');
 
                 try {
-                    const res = await fetch(`${API_URL}/api/gallery`, {
+                    const res = await fetch(`${API_URL}/gallery`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` },
                         body: formData
@@ -463,7 +463,7 @@
                 formData.append('dateOfLeaving', new Date().toISOString());
 
                 try {
-                    const res = await fetch(`${API_URL}/api/tc/upload`, {
+                    const res = await fetch(`${API_URL}/tc/upload`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` },
                         body: formData
@@ -510,7 +510,7 @@
             if (!confirm(`Are you sure you want to delete this ${type} item?`)) return;
 
             try {
-                const endpoint = type === 'gallery' ? `http://localhost:5001/api/gallery/${id}` : `http://localhost:5001/api/tc/${id}`;
+                const endpoint = type === 'gallery' ? `${API_URL}/gallery/${id}` : `${API_URL}/tc/${id}`;
                 const res = await fetch(endpoint, {
                     method: 'DELETE',
                     headers: {
