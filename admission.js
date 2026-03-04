@@ -429,15 +429,8 @@ Thank you.`;
             mailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=tiskems@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
         }
 
-        // Create a temporary link element to reliably open the URL
-        const link = document.createElement('a');
-        link.href = mailUrl;
-        link.target = '_blank';
-
-        // To ensure popup blockers don't stop it, dispatch a click synchronously
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Open the URL directly in a new tab synchronously with the form submit to bypass popup blockers
+        window.open(mailUrl, '_blank') || window.location.assign(mailUrl);
 
         animateSuccess();
 
