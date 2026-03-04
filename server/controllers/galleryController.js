@@ -67,8 +67,12 @@ export const createGalleryItem = async (req, res) => {
       });
     }
 
-    const finalPath = req.file ? `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}` : filePath;
-
+    let finalPath = filePath;
+    if (req.file) {
+      finalPath = req.file.path.startsWith('http')
+        ? req.file.path
+        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
+    }
     const galleryItem = await Gallery.create({
       title,
       description,
@@ -110,7 +114,11 @@ export const updateGalleryItem = async (req, res) => {
     if (title) item.title = title;
     if (description) item.description = description;
     if (category) item.category = category;
-    if (req.file) item.filePath = req.file.path;
+    if (req.file) {
+      item.filePath = req.file.path.startsWith('http')
+        ? req.file.path
+        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
+    }
 
     await item.save();
 

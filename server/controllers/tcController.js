@@ -55,7 +55,9 @@ export const generateTC = async (req, res) => {
 
     // Generate PDF
     const absPdfPath = await generateTCPDF(tc);
-    tc.pdfPath = `uploads/${absPdfPath.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
+    tc.pdfPath = absPdfPath.startsWith('http')
+      ? absPdfPath
+      : `uploads/${absPdfPath.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
 
     await tc.save();
 
@@ -319,7 +321,9 @@ export const uploadTCFile = async (req, res) => {
       parentName: 'N/A',
       dateOfLeaving: dateOfLeaving || new Date(),
       reason: reason || 'N/A',
-      pdfPath: `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`,
+      pdfPath: req.file.path.startsWith('http')
+        ? req.file.path
+        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`,
       generatedBy: req.user.id
     });
 
@@ -378,8 +382,8 @@ export const deleteTC = async (req, res) => {
       });
     }
 
-    // Try to delete the physical file if it exists
-    if (tc.pdfPath) {
+    // Try to delete the physical file if it exists (only local files)
+    if (tc.pdfPath && !tc.pdfPath.startsWith('http')) {
       const fullPath = path.join(__dirname, '..', tc.pdfPath);
       if (fs.existsSync(fullPath)) {
         fs.unlinkSync(fullPath);
