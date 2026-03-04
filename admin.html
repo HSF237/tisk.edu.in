@@ -510,19 +510,24 @@
             if (!list) return;
 
             if (type === 'gallery') {
-                list.innerHTML = items.map(item => `
+                list.innerHTML = items.map(item => {
+                    const srcUrl = item.filePath.startsWith('http') ? item.filePath : `${BASE_URL}/${item.filePath.replace(/\\/g, '/')}`;
+                    return `
                     <div class="mock-item">
                         <button class="delete-btn" onclick="removeItem('gallery', '${item._id}')">×</button>
-                        <img src="${BASE_URL}/${item.filePath.replace(/\\/g, '/')}">
+                        <img src="${srcUrl}">
                         <p style="font-size:0.75rem; font-weight:600; margin-top:5px;">${item.title || 'Untitled'}</p>
                     </div>
-                `).join('');
+                `}).join('');
             } else if (type === 'tc') {
                 list.innerHTML = items.map(item => {
-                    // Extract relative path to handle old absolute paths in DB
-                    const matches = item.pdfPath ? item.pdfPath.match(/[\\/]?(uploads[\\/].*)/) : null;
-                    const rel = matches ? matches[1] : item.pdfPath;
-                    const cleanUrl = `${BASE_URL}/${rel.replace(/\\/g, '/')}`;
+                    // Extract relative path to handle old absolute paths in DB, or use http if present
+                    let cleanUrl = item.pdfPath;
+                    if (cleanUrl && !cleanUrl.startsWith('http')) {
+                        const matches = cleanUrl.match(/[\\/]?(uploads[\\/].*)/);
+                        const rel = matches ? matches[1] : cleanUrl;
+                        cleanUrl = `${BASE_URL}/${rel.replace(/\\/g, '/')}`;
+                    }
 
                     return `
                     <div class="mock-item">

@@ -564,9 +564,6 @@
             const container = document.getElementById('certificate-container');
 
             // Set the PDF Reference
-            // The pdfPath from server might be absolute or relative to server root
-            // Assuming the server serves uploads at /uploads
-            // If pdfPath is 'uploads/tc/file.pdf', we need to prepend the domain
             let url = student.pdfPath;
             if (url && !url.startsWith('http')) {
                 // Extra-robust path cleaning: Extract everything after /uploads/ or uploads/
@@ -580,7 +577,6 @@
             container.style.display = 'block';
             container.scrollIntoView({ behavior: 'smooth' });
         }
-
 
         function resetSearch() {
             document.getElementById('searchAdmNo').value = '';
