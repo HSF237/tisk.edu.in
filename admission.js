@@ -4,14 +4,7 @@
  */
 
 (function () {
-    // 0. Load EmailJS SDK automatically
-    const sdkScript = document.createElement('script');
-    sdkScript.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
-    document.head.appendChild(sdkScript);
-
-    sdkScript.onload = function () {
-        emailjs.init("OI57iA6POctEQHZlQ"); // <-- PLACE YOUR PUBLIC KEY HERE
-    };
+    // Direct Gmail Redirection Logic inside form submit
 
     // 1. Inject Styles
     const style = document.createElement('style');
@@ -388,52 +381,58 @@
         const btn = document.getElementById('admissionSubmitBtn');
         const originalContent = btn.innerHTML;
 
-        // 0. Verify EmailJS is ready
-        if (typeof emailjs === 'undefined') {
-            alert("The email service is not fully loaded yet. Please wait a few seconds and try again.");
-            btn.classList.remove('loading');
-            btn.innerHTML = originalContent;
-            btn.disabled = false;
-            return;
-        }
-
         // 1. Start Sending Animation
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-circle-notch fa-spin-custom"></i> Processing...';
         btn.disabled = true;
-        console.log('Starting admission submission...');
 
-        // 2. Prepare Email Parameters
-        const templateParams = {
-            student_name: form.student_name.value,
-            class: form.class.value,
-            parent_name: form.parent_name.value,
-            phone: form.phone.value,
-            email: form.email.value || 'N/A',
-            address: form.address.value,
-            // Added from_name and message as fallbacks for default templates
-            from_name: form.student_name.value,
-            message: `New Admission: ${form.student_name.value} for ${form.class.value}`
-        };
+        // 2. Prepare Email Subject and Body
+        const studentName = form.student_name.value;
+        const className = form.class.value;
+        const parentName = form.parent_name.value;
+        const phone = form.phone.value;
+        const email = form.email.value || 'N/A';
+        const address = form.address.value;
 
-        // 3. Real Email Sending
-        // Add a timeout to simulate network if it's too fast, for UX
+        const subject = `New Admission Enquiry: ${studentName} for class ${className}`;
+
+        const bodyContent = `Hello Principal,
+
+A new admission enquiry has been submitted from the TISK EMS website.
+
+STUDENT DETAILS:
+----------------
+Name: ${studentName}
+Class Applied For: ${className}
+
+GUARDIAN DETAILS:
+-----------------
+Name: ${parentName}
+Contact Number: ${phone}
+Email Address: ${email}
+
+RESIDENCE ADDRESS:
+------------------
+${address}
+
+Thank you.`;
+
+        // 3. Open Gmail directly with prefilled data
         setTimeout(() => {
-            emailjs.send('service_wtt6ugc', 'template_8pprar7', templateParams)
-                .then(function () {
-                    console.log('REAL EMAIL SENT SUCCESS!');
-                    // Transition to success state
-                    animateSuccess();
-                }, function (error) {
-                    console.error('EMAIL SENDING FAILED...', error);
-                    alert("Failed to send email. Please check your internet connection or try again later.\nError: " + JSON.stringify(error));
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let mailUrl = '';
 
-                    // Reset button
-                    btn.classList.remove('loading');
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
-                });
-        }, 500);
+            if (isMobile) {
+                // Better for opening mobile Gmail app
+                mailUrl = `mailto:tiskems@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
+            } else {
+                // Opens Gmail directly in a web browser tab
+                mailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=tiskems@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
+            }
+
+            window.open(mailUrl, '_blank');
+            animateSuccess();
+        }, 800);
 
         function animateSuccess() {
             btn.innerHTML = '<i class="fas fa-paper-plane fa-bounce"></i> Delivering...';
