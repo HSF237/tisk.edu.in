@@ -364,5 +364,38 @@ export const searchTCByAdmNo = async (req, res) => {
     });
   }
 };
+// @desc    Delete TC
+// @route   DELETE /api/tc/:id
+// @access  Private/Admin
+export const deleteTC = async (req, res) => {
+  try {
+    const tc = await TC.findById(req.params.id);
 
+    if (!tc) {
+      return res.status(404).json({
+        success: false,
+        message: 'TC not found'
+      });
+    }
 
+    // Try to delete the physical file if it exists
+    if (tc.pdfPath) {
+      const fullPath = path.join(__dirname, '..', tc.pdfPath);
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      }
+    }
+
+    await tc.deleteOne();
+
+    res.json({
+      success: true,
+      message: 'TC removed successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

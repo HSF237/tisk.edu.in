@@ -7,7 +7,8 @@ import {
   downloadTC,
   createManualTC,
   uploadTCFile,
-  searchTCByAdmNo
+  searchTCByAdmNo,
+  deleteTC
 } from '../controllers/tcController.js';
 import { upload } from '../utils/upload.js';
 
@@ -22,6 +23,7 @@ router.post('/upload', protect, authorize('admin'), upload.single('tcFile'), upl
 router.get('/', protect, getTCs);
 router.get('/:id', protect, getTCById);
 router.get('/:id/download', protect, downloadTC);
+router.delete('/:id', protect, authorize('admin'), deleteTC);
 
 export default router;
 
