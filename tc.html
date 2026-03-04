@@ -569,8 +569,9 @@
             // If pdfPath is 'uploads/tc/file.pdf', we need to prepend the domain
             let url = student.pdfPath;
             if (url && !url.startsWith('http')) {
-                // Ensure it starts with uploads/ and uses forward slashes
-                const relativePath = url.includes('uploads') ? 'uploads' + url.split('uploads')[1] : url;
+                // Extra-robust path cleaning: Extract everything after /uploads/ or uploads/
+                const matches = url.match(/[\\/]?(uploads[\\/].*)/);
+                const relativePath = matches ? matches[1] : url;
                 url = `${API_URL}/${relativePath.replace(/\\/g, '/')}`;
             }
 

@@ -423,14 +423,19 @@
                 const data = await res.json();
 
                 if (data.success && data.data.length > 0) {
-                    grid.innerHTML = data.data.map(item => `
-                        <div class="gallery-item" data-src="${API_URL}/${item.filePath.replace(/\\/g, '/')}">
-                            <img src="${API_URL}/${item.filePath.replace(/\\/g, '/')}" alt="${item.title}">
+                    grid.innerHTML = data.data.map(item => {
+                        const pathMatches = item.filePath ? item.filePath.match(/[\\/]?(uploads[\\/].*)/) : null;
+                        const relPath = pathMatches ? pathMatches[1] : item.filePath;
+                        const fullPath = `${API_URL}/${relPath.replace(/\\/g, '/')}`;
+
+                        return `
+                        <div class="gallery-item" data-src="${fullPath}">
+                            <img src="${fullPath}" alt="${item.title}">
                             <div class="gallery-overlay">
                                 <div class="gallery-title">${item.title}</div>
                             </div>
                         </div>
-                    `).join('');
+                    `}).join('');
 
                     // Re-bind click events
                     bindLightbox();
