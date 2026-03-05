@@ -63,13 +63,16 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
   });
 }
 
-// File filter (Optional: if you want to restrict types even on cloudinary)
+// File filter - explicitly allow images and PDFs
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|pdf/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const allowedMimetypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'application/pdf'
+  ];
 
-  if (mimetype && extname) {
+  if (allowedMimetypes.includes(file.mimetype)) {
     return cb(null, true);
   } else {
     cb(new Error('Only .jpeg, .jpg, .png, and .pdf files are allowed'));
