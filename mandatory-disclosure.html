@@ -1105,9 +1105,9 @@
     <script>
         // --- Data Store ---
         const documents = {
-            'building': { title: 'Building Stability Certificate', seal: 'Safe Structure', img: 'https://picsum.photos/seed/build/600/400', desc: 'Certified structural stability for school premises.' },
-            'fire': { title: 'Fire NOC', seal: 'Fire Safe', img: 'https://picsum.photos/seed/fire/600/400', desc: 'Fire safety compliance clearance.' },
-            'water': { title: 'Water & Sanitation', seal: 'Hygiene Certified', img: 'https://picsum.photos/seed/water/600/400', desc: 'Potable water and sanitation clearance.' },
+            'building': { title: 'Building Stability Certificate', seal: 'Safe Structure', img: 'images/bc.pdf', desc: 'Certified structural stability for school premises.' },
+            'fire': { title: 'Fire NOC', seal: 'Fire Safe', img: 'images/fire.pdf', desc: 'Fire safety compliance clearance.' },
+            'water': { title: 'Water & Sanitation', seal: 'Hygiene Certified', img: 'images/sanitory.pdf', desc: 'Potable water and sanitation clearance.' },
             'affiliation': { title: 'CBSE Affiliation Letter', seal: 'CBSE Approved', img: 'https://picsum.photos/seed/aff/600/400', desc: 'Affiliation No: 931267.' },
             'result': { title: 'Class X Results', seal: 'Academic Record', img: 'https://picsum.photos/seed/result/600/400', desc: 'Official pass percentage and performance statistics for Class X.' },
             'society': { title: 'Society Registration', seal: 'Registered Body', img: 'https://picsum.photos/seed/soc/600/400', desc: 'Trust/Society registration certificate.' }
@@ -1170,9 +1170,26 @@
             if (!doc) return;
 
             modalTitle.innerHTML = `<i class="fas fa-file-alt"></i> ${doc.title}`;
+            
+            let previewHTML = '';
+            if (doc.img.toLowerCase().endsWith('.pdf')) {
+                previewHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <iframe src="${doc.img}" style="width:100%; height:450px; border:none; border-radius:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
+                        <div style="margin-top: 15px; text-align: center;">
+                            <a href="${doc.img}" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-external-link-alt"></i> View Full Document
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                previewHTML = `<img src="${doc.img}" class="doc-preview-img" alt="Preview">`;
+            }
+
             modalContent.innerHTML = `
                 <div class="doc-seal">${doc.seal}</div>
-                <img src="${doc.img}" class="doc-preview-img" alt="Preview">
+                ${previewHTML}
                 <p style="color: #64748b; margin-bottom: 20px;">${doc.desc}</p>
                 <div style="background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #64748b;">
                     <i class="fas fa-info-circle"></i> This is a digital representation of the original physical document available at the school office.
