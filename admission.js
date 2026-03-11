@@ -417,9 +417,17 @@ ${address}
 
 Thank you.`;
 
-        // 3. Open Email client with prefilled data via mailto (works on all browsers, never blocked)
-        const mailUrl = `mailto:tiskems@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
-        window.location.href = mailUrl;
+        // 3. Open Gmail Web Interface (Preferred by users)
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=tiskems@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
+        const backupMailto = `mailto:tiskems@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
+
+        // Try to open Gmail in a new tab
+        const gmailWindow = window.open(gmailUrl, '_blank');
+
+        // If Gmail was blocked by a popup blocker, use the current window as a fallback
+        if (!gmailWindow || gmailWindow.closed || typeof gmailWindow.closed === 'undefined') {
+            window.location.href = backupMailto;
+        }
 
         animateSuccess();
 
