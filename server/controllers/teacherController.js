@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { saveFile } from '../utils/upload.js';
 
 // @desc    Get all teachers
 // @route   GET /api/teachers
@@ -84,7 +85,7 @@ export const createTeacher = async (req, res) => {
     };
 
     if (req.file) {
-      teacherData.profileImage = req.file.path;
+      teacherData.profileImage = await saveFile(req.file.buffer, req.file.mimetype, req.file.fieldname);
     }
 
     const teacher = await User.create(teacherData);
@@ -117,7 +118,7 @@ export const updateTeacher = async (req, res) => {
     if (experience) updateData.experience = parseInt(experience);
 
     if (req.file) {
-      updateData.profileImage = req.file.path;
+      updateData.profileImage = await saveFile(req.file.buffer, req.file.mimetype, req.file.fieldname);
     }
 
     const teacher = await User.findByIdAndUpdate(

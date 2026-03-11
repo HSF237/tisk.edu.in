@@ -1,4 +1,5 @@
 import TC from '../models/TC.js';
+import { saveFile } from '../utils/upload.js';
 import User from '../models/User.js';
 import QRCode from 'qrcode';
 import PDFDocument from 'pdfkit';
@@ -243,8 +244,23 @@ const generateTCPDF = async (tc) => {
 
     doc.end();
 
-    stream.on('finish', () => {
-      resolve(pdfPath);
+    stream.on('finish', async () => {
+      try {
+        // Now upload the generated file to Cloudinary if keys exist
+        const fileBuffer = fs.readFileSync(pdfPath);
+        const cloudUrl = await saveFile(fileBuffer, 'application/pdf', 'tc');
+        
+        // If we uploaded to cloud (it starts with http), we can delete the local temp file
+        if (cloudUrl && cloudUrl.startsWith('http')) {
+          fs.unlinkSync(pdfPath);
+          resolve(cloudUrl);
+        } else {
+          resolve(pdfPath);
+        }
+      } catch (err) {
+        // Fallback to local if upload fails
+        resolve(pdfPath);
+      }
     });
 
     stream.on('error', (err) => {
@@ -321,9 +337,7 @@ export const uploadTCFile = async (req, res) => {
       parentName: 'N/A',
       dateOfLeaving: dateOfLeaving || new Date(),
       reason: reason || 'N/A',
-      pdfPath: req.file.path.startsWith('http')
-        ? req.file.path
-        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`,
+      pdfPath: await saveFile(req.file.buffer, req.file.mimetype, req.file.fieldname),
       generatedBy: req.user.id
     });
 

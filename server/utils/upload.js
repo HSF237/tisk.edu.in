@@ -3,65 +3,38 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { Readable } from 'stream';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configure Cloudinary using environment variables
+// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Create uploads directory for local fallback
+const useCloudinary = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET
+);
+
+if (useCloudinary) {
+  console.log('✅ Cloudinary storage activated for uploads.');
+} else {
+  console.log('⚠️ Cloudinary keys missing. Falling back to local disk storage.');
+}
+
+// Create local uploads directory as fallback
 const uploadDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-let storage;
-
-// Check if Cloudinary credentials exist, if so use Cloudinary, otherwise fallback to local disk
-if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
-  console.log('✅ Cloudinary storage activated for uploads.');
-  storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async (req, file) => {
-      // Auto resource type allows uploading PDFs, Word docs, etc. along with images
-      return {
-        folder: 'tisk_school',
-        resource_type: 'auto',
-        public_id: file.fieldname + '-' + Date.now()
-      };
-    },
-  });
-} else {
-  console.log('⚠️ Cloudinary keys missing. Falling back to local disk storage. (Files will be lost on Render restart)');
-  storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      let uploadPath = uploadDir;
-      if (file.fieldname === 'photo' || file.fieldname === 'profileImage') {
-        uploadPath = path.join(uploadDir, 'profiles');
-      } else if (file.fieldname.includes('Certificate') || file.fieldname.includes('Marksheet')) {
-        uploadPath = path.join(uploadDir, 'documents');
-      } else {
-        uploadPath = path.join(uploadDir, 'general');
-      }
-
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath, { recursive: true });
-      }
-
-      cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-  });
-}
+// Use memory storage always - we handle saving ourselves
+const storage = multer.memoryStorage();
 
 // File filter - explicitly allow images and PDFs
 const fileFilter = (req, file, cb) => {
@@ -71,19 +44,53 @@ const fileFilter = (req, file, cb) => {
     'image/png',
     'application/pdf'
   ];
-
   if (allowedMimetypes.includes(file.mimetype)) {
     return cb(null, true);
-  } else {
-    cb(new Error('Only .jpeg, .jpg, .png, and .pdf files are allowed'));
   }
+  cb(new Error('Only .jpeg, .jpg, .png, and .pdf files are allowed'));
 };
 
 export const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024 // Increased to 10MB
-  },
-  fileFilter: fileFilter
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter
 });
 
+/**
+ * After multer processes the file into memory (req.file.buffer),
+ * call this helper to upload it to Cloudinary or save it locally.
+ * Returns the public URL string.
+ */
+export const saveFile = (fileBuffer, mimetype, fieldname) => {
+  return new Promise((resolve, reject) => {
+    if (useCloudinary) {
+      // Upload to Cloudinary via stream
+      const resourceType = mimetype === 'application/pdf' ? 'raw' : 'image';
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'tisk_school',
+          resource_type: resourceType,
+          public_id: fieldname + '-' + Date.now()
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        }
+      );
+      const readable = new Readable();
+      readable.push(fileBuffer);
+      readable.push(null);
+      readable.pipe(uploadStream);
+    } else {
+      // Save to local disk
+      const subDir = mimetype === 'application/pdf' ? 'tc' : 'general';
+      const localDir = path.join(uploadDir, subDir);
+      if (!fs.existsSync(localDir)) fs.mkdirSync(localDir, { recursive: true });
+      const ext = mimetype === 'application/pdf' ? '.pdf' : '.jpg';
+      const filename = fieldname + '-' + Date.now() + ext;
+      const filePath = path.join(localDir, filename);
+      fs.writeFileSync(filePath, fileBuffer);
+      resolve(`uploads/${subDir}/${filename}`);
+    }
+  });
+};

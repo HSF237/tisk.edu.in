@@ -1,4 +1,5 @@
 import Gallery from '../models/Gallery.js';
+import { saveFile } from '../utils/upload.js';
 
 // @desc    Get all gallery items
 // @route   GET /api/gallery
@@ -69,9 +70,7 @@ export const createGalleryItem = async (req, res) => {
 
     let finalPath = filePath;
     if (req.file) {
-      finalPath = req.file.path.startsWith('http')
-        ? req.file.path
-        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
+      finalPath = await saveFile(req.file.buffer, req.file.mimetype, req.file.fieldname);
     }
     const galleryItem = await Gallery.create({
       title,
@@ -115,9 +114,7 @@ export const updateGalleryItem = async (req, res) => {
     if (description) item.description = description;
     if (category) item.category = category;
     if (req.file) {
-      item.filePath = req.file.path.startsWith('http')
-        ? req.file.path
-        : `uploads/${req.file.path.split(/uploads[\\/]/).pop().replace(/\\/g, '/')}`;
+      item.filePath = await saveFile(req.file.buffer, req.file.mimetype, req.file.fieldname);
     }
 
     await item.save();
