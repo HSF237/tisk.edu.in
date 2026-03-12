@@ -934,11 +934,18 @@
             }
 
             .hero-buttons {
-                flex-direction: column;
+                flex-direction: row;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
             }
 
             .btn {
-                width: 100%;
+                padding: 10px 18px;
+                font-size: 0.9rem;
+                width: auto;
+                flex: 1;
+                min-width: 140px;
                 justify-content: center;
             }
 
@@ -1550,42 +1557,73 @@
         }
         @media (max-width: 768px) {
             .countdown-overlay {
-                bottom: 15px;
-                width: 95%;
+                bottom: 10px;
+                width: calc(100% - 20px);
+                max-width: 400px;
             }
             .countdown-card {
-                padding: 15px;
+                padding: 12px 15px;
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
+                border-radius: 15px;
+            }
+            .countdown-info {
+                text-align: center;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+            .countdown-badge {
+                margin-bottom: 0;
+                font-size: 0.6rem;
+                padding: 2px 6px;
+                flex-shrink: 0;
             }
             .countdown-info h2 {
-                font-size: 1.1rem;
+                font-size: 1rem;
+                white-space: normal;
+                line-height: 1.2;
+            }
+            .countdown-timer {
+                gap: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+            .timer-unit {
+                min-width: 45px;
             }
             .timer-unit span {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
+            }
+            .timer-unit label {
+                font-size: 0.55rem;
             }
         }
     </style>
     <!-- SMOOTH SCROLL (LENIS) -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
     <script>
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
+        if (typeof Lenis !== 'undefined') {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
 
-        function raf(time) {
-            lenis.raf(time);
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+
             requestAnimationFrame(raf);
         }
-
-        requestAnimationFrame(raf);
     </script>
     <script>
         const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
