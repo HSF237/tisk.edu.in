@@ -1059,6 +1059,37 @@
             </div>
         </div>
     </section>
+    
+    <!-- Dynamic Countdown Section -->
+    <section id="countdown-section" class="countdown-container" style="display: none;">
+        <div class="container">
+            <div class="countdown-card">
+                <div class="countdown-info">
+                    <span class="countdown-badge">Upcoming Event</span>
+                    <h2 id="event-name">Event Name</h2>
+                    <p>Be part of our next milestone. Counting down the moments!</p>
+                </div>
+                <div class="countdown-timer">
+                    <div class="timer-unit">
+                        <span id="days">00</span>
+                        <label>Days</label>
+                    </div>
+                    <div class="timer-unit">
+                        <span id="hours">00</span>
+                        <label>Hours</label>
+                    </div>
+                    <div class="timer-unit">
+                        <span id="minutes">00</span>
+                        <label>Minutes</label>
+                    </div>
+                    <div class="timer-unit">
+                        <span id="seconds">00</span>
+                        <label>Seconds</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Features Section -->
     <section class="features">
@@ -1452,6 +1483,101 @@
                 box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
             }
         }
+
+        /* Dynamic Countdown Styles */
+        .countdown-container {
+            padding: 40px 0;
+            background: #f8fafc;
+        }
+        .countdown-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .countdown-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(251, 191, 36, 0.05);
+            border-radius: 50%;
+        }
+        .countdown-info {
+            flex: 1;
+            max-width: 500px;
+        }
+        .countdown-badge {
+            background: var(--gold);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .countdown-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+            font-family: 'Outfit';
+        }
+        .countdown-info p {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        .countdown-timer {
+            display: flex;
+            gap: 20px;
+        }
+        .timer-unit {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            min-width: 100px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .timer-unit span {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Outfit';
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .timer-unit label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 900px) {
+            .countdown-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+            .countdown-timer {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .timer-unit {
+                min-width: 80px;
+                padding: 15px;
+            }
+        }
     </style>
     <!-- SMOOTH SCROLL (LENIS) -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
@@ -1474,6 +1600,53 @@
 
         requestAnimationFrame(raf);
     </script>
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5001/api'
+            : 'https://tisk-backend.onrender.com/api';
+
+        async function initCountdown() {
+            try {
+                const res = await fetch(`${API_BASE}/countdown`);
+                const data = await res.json();
+                
+                if (data.success && data.data && data.data.isActive) {
+                    const event = data.data;
+                    const targetDate = new Date(event.targetDate).getTime();
+                    
+                    document.getElementById('event-name').innerText = event.eventName;
+                    document.getElementById('countdown-section').style.display = 'block';
+
+                    const updateTimer = () => {
+                        const now = new Date().getTime();
+                        const distance = targetDate - now;
+
+                        if (distance < 0) {
+                            document.getElementById('countdown-section').style.display = 'none';
+                            return;
+                        }
+
+                        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        document.getElementById('days').innerText = d.toString().padStart(2, '0');
+                        document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+                        document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+                        document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+                    };
+
+                    updateTimer();
+                    setInterval(updateTimer, 1000);
+                }
+            } catch (err) {
+                console.error('Countdown init failed', err);
+            }
+        }
+        initCountdown();
+    </script>
+    <script src="admission.js"></script>
 </body>
 
 </html>

@@ -272,6 +272,7 @@
                     class="fas fa-images"></i> Gallery</div>
             <div class="nav-item" data-panel="tc" onclick="showPanel('tc')"><i class="fas fa-file-pdf"></i> TC
                 Management</div>
+            <div class="nav-item" data-panel="countdown" onclick="showPanel('countdown')"><i class="fas fa-clock"></i> Countdown</div>
             <div class="nav-item btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
         </div>
 
@@ -316,6 +317,19 @@
                 </div>
                 <h3>Recently Uploaded TCs</h3>
                 <div id="tc-list" class="mock-list"></div>
+            </div>
+
+            <!-- Countdown Panel -->
+            <div id="countdown-panel" class="upload-section">
+                <div class="input-group">
+                    <label>Upcoming Event Name</label>
+                    <input type="text" id="countdown-event" placeholder="e.g. Annual Day Celebration 2026">
+                </div>
+                <div class="input-group">
+                    <label>Event Date & Time</label>
+                    <input type="datetime-local" id="countdown-date">
+                </div>
+                <button class="login-btn" onclick="saveCountdown()" style="max-width: 200px;">Update Countdown</button>
             </div>
 
             <!-- Disclosure upload removed -->
@@ -412,10 +426,44 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    renderLists(type, data.data);
+                    if (type === 'countdown') {
+                        if (data.data) {
+                            document.getElementById('countdown-event').value = data.data.eventName;
+                            // Format date for datetime-local input
+                            const d = new Date(data.data.targetDate);
+                            const formattedDate = d.toISOString().slice(0, 16);
+                            document.getElementById('countdown-date').value = formattedDate;
+                        }
+                    } else {
+                        renderLists(type, data.data);
+                    }
                 }
             } catch (err) {
                 console.error(`Failed to load ${type}`, err);
+            }
+        }
+
+        async function saveCountdown() {
+            const eventName = document.getElementById('countdown-event').value;
+            const targetDate = document.getElementById('countdown-date').value;
+
+            if (!eventName || !targetDate) return alert('Please fill both fields');
+
+            try {
+                const res = await fetch(`${API_URL}/countdown`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ eventName, targetDate })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Countdown updated successfully!');
+                }
+            } catch (err) {
+                alert('Update failed');
             }
         }
 

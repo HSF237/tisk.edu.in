@@ -15,6 +15,7 @@ import studentRoutes from './routes/students.js';
 import noticeRoutes from './routes/notices.js';
 import galleryRoutes from './routes/gallery.js';
 import certificateRoutes from './routes/certificates.js';
+import countdownRoutes from './routes/countdown.js';
 
 // Load environment variables (Moved to absolute top via import)
 
@@ -47,6 +48,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/countdown', countdownRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {
