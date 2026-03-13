@@ -770,10 +770,16 @@
 
         // Fetch House Points Championship Data
         async function initHousePoints() {
-            // Check both 5001 and 5000 for local development to be safe
-            const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                ? (window.location.port === '5001' ? 'http://localhost:5001' : 'http://localhost:5000')
-                : 'https://tisk-backend.onrender.com';
+            function getApiBase() {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    const currentPort = window.location.port;
+                    if (currentPort === '5501' || currentPort === '5500' || currentPort === '3000') return 'http://localhost:5000';
+                    return `http://localhost:${currentPort || '5000'}`;
+                }
+                return 'https://tisk-backend.onrender.com';
+            }
+            const API_BASE_URL = getApiBase();
+            console.log('🔍 Events Page Checking API:', API_BASE_URL);
 
             console.log('Fetching House Points from:', `${API_BASE_URL}/api/house-points`);
 

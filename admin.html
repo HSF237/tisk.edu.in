@@ -273,7 +273,7 @@
             <div class="nav-item" data-panel="tc" onclick="showPanel('tc')"><i class="fas fa-file-pdf"></i> TC
                 Management</div>
             <div class="nav-item" data-panel="countdown" onclick="showPanel('countdown')"><i class="fas fa-clock"></i> Countdown</div>
-            <div class="nav-item" data-panel="housePoints" onclick="showPanel('housePoints')"><i class="fas fa-trophy"></i> House Points</div>
+            <div class="nav-item" data-panel="house-points" onclick="showPanel('house-points')"><i class="fas fa-trophy"></i> House Points</div>
             <div class="nav-item btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
         </div>
 
@@ -334,7 +334,7 @@
             </div>
 
             <!-- House Points Panel -->
-            <div id="housePoints-panel" class="upload-section">
+            <div id="house-points-panel" class="upload-section">
                 <div id="house-list-container" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
                     <!-- Dynamic house inputs will be injected here -->
                 </div>
@@ -359,10 +359,21 @@
     </div>
 
     <script>
-        const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:5001'
-            : 'https://tisk-backend.onrender.com';
+        // ULTRA-ROBUST API DETECTION
+        // We check 5001 (Render default), 5000 (Local default), and the current browser port.
+        function getApiBase() {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // If user is accessing site via :5001, backend is likely :5001. If :5000, then :5000.
+                const currentPort = window.location.port;
+                if (currentPort === '5500' || currentPort === '3000') return 'http://localhost:5000'; // Common VS Code live server ports
+                return `http://localhost:${currentPort || '5000'}`;
+            }
+            return 'https://tisk-backend.onrender.com';
+        }
+
+        const BASE_URL = getApiBase();
         const API_URL = `${BASE_URL}/api`;
+        console.log('🚀 Admin Portal connecting to:', API_URL);
         let currentUser = null;
         let token = localStorage.getItem('tisk_token');
 
@@ -456,22 +467,20 @@
                             const localISOTime = (new Date(d.getTime() - offset)).toISOString().slice(0, 16);
                             document.getElementById('countdown-date').value = localISOTime;
                         }
-                    } else if (type === 'housePoints') {
+                    } else if (type === 'house-points') {
+                        console.log('📦 Received House Points Data:', data.data);
                         const container = document.getElementById('house-list-container');
-                        container.innerHTML = '<p style="text-align:center; color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Loading points...</p>';
+                        container.innerHTML = '';
                         
-                        // Add a small delay for smoother feel
-                        setTimeout(() => {
-                            container.innerHTML = '';
-                            if (data.data && data.data.houses && data.data.houses.length > 0) {
-                                data.data.houses.forEach(house => addHouseRow(house));
-                                document.getElementById('hp-status').value = data.data.isActive ? "true" : "false";
-                            } else {
-                                // Add one empty row by default if no data exists
-                                addHouseRow();
-                                document.getElementById('hp-status').value = "false";
-                            }
-                        }, 500);
+                        if (data.data && data.data.houses && data.data.houses.length > 0) {
+                            data.data.houses.forEach(house => addHouseRow(house));
+                            document.getElementById('hp-status').value = data.data.isActive ? "true" : "false";
+                            console.log('✅ Loaded', data.data.houses.length, 'houses');
+                        } else {
+                            console.log('ℹ️ No houses found in DB, creating empty row.');
+                            addHouseRow();
+                            document.getElementById('hp-status').value = "false";
+                        }
                     } else {
                         renderLists(type, data.data);
                     }
