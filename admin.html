@@ -458,11 +458,20 @@
                         }
                     } else if (type === 'housePoints') {
                         const container = document.getElementById('house-list-container');
-                        container.innerHTML = '';
-                        if (data.data && data.data.houses) {
-                            data.data.houses.forEach(house => addHouseRow(house));
-                            document.getElementById('hp-status').value = data.data.isActive ? "true" : "false";
-                        }
+                        container.innerHTML = '<p style="text-align:center; color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Loading points...</p>';
+                        
+                        // Add a small delay for smoother feel
+                        setTimeout(() => {
+                            container.innerHTML = '';
+                            if (data.data && data.data.houses && data.data.houses.length > 0) {
+                                data.data.houses.forEach(house => addHouseRow(house));
+                                document.getElementById('hp-status').value = data.data.isActive ? "true" : "false";
+                            } else {
+                                // Add one empty row by default if no data exists
+                                addHouseRow();
+                                document.getElementById('hp-status').value = "false";
+                            }
+                        }, 500);
                     } else {
                         renderLists(type, data.data);
                     }

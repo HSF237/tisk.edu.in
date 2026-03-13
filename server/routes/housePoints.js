@@ -30,14 +30,15 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
 
     if (points) {
       points.houses = houses;
-      points.isActive = isActive;
+      points.isActive = (isActive === true || isActive === 'true');
       points.updatedBy = req.user.id;
       points.lastUpdated = Date.now();
+      points.markModified('houses'); // Force Mongoose to recognize the array change
       await points.save();
     } else {
       points = await HousePoint.create({
         houses,
-        isActive,
+        isActive: (isActive === true || isActive === 'true'),
         updatedBy: req.user.id
       });
     }
