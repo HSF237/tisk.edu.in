@@ -359,21 +359,18 @@
     </div>
 
     <script>
-        // ULTRA-ROBUST API DETECTION
-        // We check 5001 (Render default), 5000 (Local default), and the current browser port.
+        // ROBUST API DETECTION
         function getApiBase() {
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                // If user is accessing site via :5001, backend is likely :5001. If :5000, then :5000.
-                const currentPort = window.location.port;
-                if (currentPort === '5500' || currentPort === '3000') return 'http://localhost:5000'; // Common VS Code live server ports
-                return `http://localhost:${currentPort || '5000'}`;
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || !window.location.hostname;
+            if (isLocal) {
+                // Return 5001 as it is your primary backend port
+                return 'http://localhost:5001';
             }
             return 'https://tisk-backend.onrender.com';
         }
 
         const BASE_URL = getApiBase();
         const API_URL = `${BASE_URL}/api`;
-        console.log('🚀 Admin Portal connecting to:', API_URL);
         let currentUser = null;
         let token = localStorage.getItem('tisk_token');
 
