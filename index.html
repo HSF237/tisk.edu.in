@@ -512,10 +512,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
             color: white;
             overflow: hidden;
             background: #0f172a;
+            margin-top: 0; /* Full screen start */
         }
 
         .slides-wrapper {
@@ -539,6 +539,7 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 1.2s ease-in-out, visibility 1.2s;
+            background-image: var(--bg-desktop) !important;
             background-size: cover;
             background-position: center;
         }
@@ -549,23 +550,76 @@
             z-index: 2;
         }
 
-        /* Overlay per slide */
         .slide-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(15, 23, 42, 0.8) 100%);
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.2) 20%, rgba(15, 23, 42, 0.1) 80%, rgba(15, 23, 42, 0.5) 100%);
             z-index: 1;
+        }
+
+        /* Specialized overlay for subject-focus slides */
+        .slide-item.subject-focus .slide-overlay {
+            background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.5) 40%, rgba(15, 23, 42, 0.85) 100%);
         }
 
         .slide-content {
             position: relative;
             z-index: 3;
             max-width: 900px;
+            width: 100%;
+            height: 100%;
             padding: 0 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+        }
+
+        /* Subject-Aware Layout (Refined & Balanced) */
+        .slide-item.subject-focus {
+            justify-content: center; 
+            text-align: center;
+        }
+
+        .slide-item.subject-focus .slide-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            align-items: center;
+            padding: 100px 30px 180px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-item.subject-focus .hero-title {
+            font-size: 3.8rem; /* Reduced from 6.5rem for elegance */
+            line-height: 1.1;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .slide-item.subject-focus .hero-subtitle {
+            font-size: 1.15rem; /* Reduced size */
+            max-width: 600px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            background: rgba(15, 23, 42, 0.35); /* Elegant glass overlay */
+            padding: 12px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .slide-item.subject-focus .slide-overlay {
+            /* Consistent dark overlay for text pop */
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%);
         }
 
         /* Animated Elements within Slide */
@@ -579,11 +633,12 @@
             opacity: 0;
             transform: translateY(40px);
             transition: all 1s cubic-bezier(0.25, 1, 0.5, 1) 0.7s;
-            font-size: 3.5rem;
-            line-height: 1.15;
-            margin-bottom: 25px;
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
             font-weight: 800;
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
+            max-width: 800px;
         }
 
         .slide-item .hero-subtitle {
@@ -1014,31 +1069,32 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="slides-wrapper" id="heroSlider">
-            <!-- Slide 1 -->
-            <div class="slide-item active" style="background-image: url('assets/images/slide1.png');">
+            <!-- Slide 1 (Responsive Dual Image) -->
+            <div class="slide-item active subject-focus" 
+                 style="--bg-desktop: url('images/slide1.png?v=31'); --bg-mobile: url('images/slide1-1.png?v=1');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <div class="hero-badge"><i class="fas fa-certificate"></i> CBSE Affiliated School</div>
                     <h1 class="hero-title" data-text="Welcome to the World of Excellence"></h1>
                     <p class="hero-subtitle"
-                        data-text="Nurturing curiosity and developing globally competent citizens since 1988. Experience high-quality education in a modern environment.">
+                        data-text="Nurturing curiosity and developing globally competent citizens since 1988.">
                     </p>
                     <div class="hero-buttons">
-                        <button onclick="openAdmissionModal()" class="btn btn-gold"><i class="fas fa-paper-plane"></i>
-                            Enroll Now</button>
-                        <a href="about.html" class="btn btn-primary">Discover More</a>
+                        <button onclick="openAdmissionModal()" class="btn btn-gold">Enroll Now</button>
+                        <a href="about.html" class="btn btn-primary">Discover</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 2 -->
-            <div class="slide-item" style="background-image: url('assets/images/slide2.png');">
+            <!-- Slide 2 (Responsive Dual Image) -->
+            <div class="slide-item subject-focus" 
+                 style="--bg-desktop: url('images/slide2.png?v=2'); --bg-mobile: url('images/slide2-1.png?v=2');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <div class="hero-badge"><i class="fas fa-microscope"></i> Modern Infrastructure</div>
                     <h1 class="hero-title" data-text="Shaping Bright Futures Together"></h1>
                     <p class="hero-subtitle"
-                        data-text="Smart classrooms, digital labs, and expert faculty dedicated to your child's holistic growth and academic brilliance.">
+                        data-text="Smart classrooms, digital labs, and expert faculty dedicated to your child's holistic growth.">
                     </p>
                     <div class="hero-buttons">
                         <button onclick="openAdmissionModal()" class="btn btn-gold"><i
@@ -1048,19 +1104,19 @@
                 </div>
             </div>
 
-            <!-- Slide 3 -->
-            <div class="slide-item" style="background-image: url('assets/images/slide3.png');">
+            <!-- Slide 3 (Responsive Dual Image) -->
+            <div class="slide-item subject-focus" 
+                 style="--bg-desktop: url('images/slide3.png?v=2'); --bg-mobile: url('images/slide3-1.png?v=2');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <div class="hero-badge"><i class="fas fa-basketball-ball"></i> Beyond Academics</div>
                     <h1 class="hero-title" data-text="Excellence in Sports & Culture"></h1>
                     <p class="hero-subtitle"
-                        data-text="State-of-the-art sports complex and vibrant cultural programs to help every student find their true passion.">
+                        data-text="State-of-the-art sports complex and vibrant cultural programs to help students find their true passion.">
                     </p>
                     <div class="hero-buttons">
                         <button onclick="openAdmissionModal()" class="btn btn-gold"><i class="fas fa-user-plus"></i>
-                            Join
-                            Our Community</button>
+                            Join Our Community</button>
                     </div>
                 </div>
             </div>
@@ -1461,6 +1517,31 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .slide-item {
+                background-image: var(--bg-mobile) !important;
+                background-position: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+            }
+            .slide-item .hero-title {
+                font-size: 2.1rem !important; /* Forces small size for all slides on mobile */
+                line-height: 1.2 !important;
+                margin-top: 20px !important;
+            }
+            .slide-item .hero-subtitle {
+                font-size: 0.95rem !important;
+                padding: 10px 15px !important;
+                max-width: 90% !important;
+                margin-bottom: 20px !important;
+            }
+            .slide-content {
+                padding: 80px 20px 200px !important;
+                margin: 0 auto !important;
+                align-items: center !important;
+            }
+            .hero-buttons {
+                justify-content: center !important;
+            }
             .whatsapp-float {
                 bottom: 20px;
                 right: 20px;
