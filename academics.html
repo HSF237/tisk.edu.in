@@ -217,16 +217,23 @@
 
         .facilities-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
         }
 
         .facility-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             opacity: 0;
             transform: translateY(30px);
         }
@@ -234,45 +241,63 @@
         .facility-card.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: all 0.6s ease-out;
         }
 
         .facility-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
         }
 
-        .facility-img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.5s;
+        .facility-icon-wrapper {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: all 0.4s ease;
         }
 
-        .facility-card:hover .facility-img {
-            transform: scale(1.1);
-        }
-
-        .facility-content {
-            padding: 30px;
+        .facility-card:hover .facility-icon-wrapper {
+            transform: rotateY(180deg);
         }
 
         .facility-icon {
             font-size: 2.5rem;
             color: var(--accent);
-            margin-bottom: 15px;
         }
 
         .facility-content h3 {
             font-size: 1.5rem;
             color: var(--primary);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
         }
 
         .facility-content p {
             color: var(--text-light);
+            font-size: 0.95rem;
             line-height: 1.7;
         }
+
+        /* Unique identities for cards */
+        .facility-card:nth-child(2) .facility-icon-wrapper { background: rgba(37, 211, 102, 0.1); }
+        .facility-card:nth-child(2) .facility-icon { color: #16a34a; }
+
+        .facility-card:nth-child(3) .facility-icon-wrapper { background: rgba(251, 191, 36, 0.1); }
+        .facility-card:nth-child(3) .facility-icon { color: var(--gold); }
+
+        .facility-card:nth-child(4) .facility-icon-wrapper { background: rgba(244, 63, 94, 0.1); }
+        .facility-card:nth-child(4) .facility-icon { color: #f43f5e; }
+
+        .facility-card:nth-child(5) .facility-icon-wrapper { background: rgba(139, 92, 246, 0.1); }
+        .facility-card:nth-child(5) .facility-icon { color: #8b5cf6; }
+
+        .facility-card:nth-child(6) .facility-icon-wrapper { background: rgba(20, 184, 166, 0.1); }
+        .facility-card:nth-child(6) .facility-icon { color: #14b8a6; }
 
         footer {
             background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
@@ -319,24 +344,25 @@
             }
             .facilities-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
+                gap: 15px;
             }
-            .facility-img {
-                height: 120px;
+            .facility-card {
+                padding: 20px 15px;
             }
-            .facility-content {
-                padding: 12px;
+            .facility-icon-wrapper {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 15px;
             }
             .facility-icon {
-                font-size: 1.2rem;
-                margin-bottom: 8px;
+                font-size: 1.5rem;
             }
             .facility-content h3 {
-                font-size: 0.9rem;
-                margin-bottom: 5px;
+                font-size: 1.0rem;
+                margin-bottom: 8px;
             }
             .facility-content p {
-                font-size: 0.7rem;
+                font-size: 0.75rem;
                 line-height: 1.4;
             }
         }
@@ -401,65 +427,62 @@
 
         <div class="facilities-grid">
             <div class="facility-card">
-                <img src="https://www.shutterstock.com/image-illustration/modern-computer-classroom-featuring-multiple-600nw-2490250733.jpg"
-                    alt="Computer Lab" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-laptop-code facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Computer Lab</h3>
-                    <p>Advanced systems with high-speed internet, coding labs, and digital literacy programs for all
-                        students.</p>
+                    <p>Advanced systems with high-speed internet and digital literacy programs.</p>
                 </div>
             </div>
 
             <div class="facility-card">
-                <img src="https://srisarvajnaschool.in/wp-content/uploads/2023/12/24.jpg" alt="Science Lab"
-                    class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-flask facility-icon"></i>
-                    <h3>Science Laboratory</h3>
-                    <p>Modern Physics, Chemistry, and Biology labs with experimental equipment and research facilities.
-                    </p>
+                </div>
+                <div class="facility-content">
+                    <h3>Science Lab</h3>
+                    <p>Modern Physics, Chemistry, and Biology labs with experimental equipment.</p>
                 </div>
             </div>
 
             <div class="facility-card">
-                <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/blogs/20044/images/VoNLCopMRhSPSTxOO4hQ_caleb-woods-fulXJYIvRi8-unsplash.jpg"
-                    alt="Library" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-book facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Library</h3>
-                    <p>Over 200+ books, journals, and digital resources to support learning and research.</p>
+                    <p>Over 200+ books, journals, and digital resources to support learning.</p>
                 </div>
             </div>
 
             <div class="facility-card">
-                <img src="https://content.jdmagicbox.com/comp/def_content/cricket-ground-on-hire/y3aherodbh-cricket-ground-on-hire-10-6ajvc.jpg"
-                    alt="Sports" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-football-ball facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Sports Facilities</h3>
-                    <p>Well-maintained grounds for cricket, football, badminton, and other athletic activities.</p>
+                    <p>Well-maintained grounds for cricket, football, and athletic activities.</p>
                 </div>
             </div>
 
             <div class="facility-card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFmsKqLnl-pbnHhEPTk0oJhTzOTYcBAyo9lg&s"
-                    alt="Smart Classroom" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-chalkboard-teacher facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Smart Classrooms</h3>
-                    <p>Interactive boards, projectors, and digital learning tools for immersive education experience.
-                    </p>
+                    <p>Interactive boards and digital learning tools for immersive education.</p>
                 </div>
             </div>
 
             <div class="facility-card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsakBakQQBefMqoJcI_smkW3kofNFOIPQFyg&s"
-                    alt="Auditorium" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-theater-masks facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Prayer Hall</h3>
-                    <p>Modern auditorium for assemblies, cultural programs, seminars and co-curricular events.</p>
+                    <p>Modern auditorium for assemblies and cultural programs.</p>
                 </div>
             </div>
         </div>
@@ -475,61 +498,53 @@
         </div>
 
         <div class="facilities-grid">
-            <!-- Karate -->
             <div class="facility-card">
-                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Karate" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-fist-raised facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Karate</h3>
-                    <p>Traditional martial arts training for self-defense, discipline, and physical fitness under expert
-                        Senseis.</p>
+                    <p>Traditional martial arts training for self-defense and discipline.</p>
                 </div>
             </div>
 
-            <!-- Chess -->
             <div class="facility-card">
-                <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Chess" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-chess facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Chess</h3>
-                    <p>Mental strategy and cognitive development sessions guided by competitive chess masters.</p>
+                    <p>Mental strategy and cognitive development sessions guided by masters.</p>
                 </div>
             </div>
 
-            <!-- Football -->
             <div class="facility-card">
-                <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Football" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-futbol facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Football</h3>
-                    <p>Comprehensive field training focusing on teamwork, stamina, and professional football techniques.
-                    </p>
+                    <p>Comprehensive field training focusing on teamwork and stamina.</p>
                 </div>
             </div>
 
-            <!-- Badminton -->
             <div class="facility-card">
-                <img src="https://images.unsplash.com/photo-1626224580194-8600e16738c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Badminton" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-table-tennis facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Badminton</h3>
-                    <p>Refined coaching on agility, reflexes, and court movements by experienced regional players.</p>
+                    <p>Refined coaching on agility and reflexes by experienced players.</p>
                 </div>
             </div>
 
-            <!-- Skating -->
             <div class="facility-card" style="margin-bottom: 40px;">
-                <img src="https://images.unsplash.com/photo-1547118137-124b27670743?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Skating" class="facility-img">
-                <div class="facility-content">
+                <div class="facility-icon-wrapper">
                     <i class="fas fa-skating facility-icon"></i>
+                </div>
+                <div class="facility-content">
                     <h3>Skating</h3>
-                    <p>Balance and coordination building through professionally supervised skating sessions in safe
-                        environments.</p>
+                    <p>Balance and coordination building through professionally supervised sessions.</p>
                 </div>
             </div>
         </div>
